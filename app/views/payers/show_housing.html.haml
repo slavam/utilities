@@ -1,0 +1,64 @@
+= render :partial => 'main_data'
+%h1 Характеристики жилья
+.content
+  %table.card
+    %tr
+      %th Фирма-Счет
+      - for r in @room_params do
+        %th= r.code_firm.to_s+'-'+r.bank_book
+
+    %tr{:class => cycle('even', 'odd')}
+      %th Одна комната?
+      - for r in @room_params do
+        %td= r.one_roomed_flat==1 ? 'ДА' : r.one_roomed_flat==2 ? 'НЕТ':'Нет информации'
+    %tr
+      %th Оплата лифта в квартплате? 
+      - for r in @room_params do
+        %td= r.lift==1 ? 'ДА' : 'НЕТ'
+    %tr
+      %th Дата приватизации
+      - for r in @room_params do
+        %td= r.date_privatization.to_date.to_s=='1899-12-31' ? '' : r.date_privatization.to_date
+    %tr
+      %th Форма собственности
+      - for r in @room_params do
+        %td= r.form_property
+    %tr
+      %th S общая
+      - for r in @room_params do
+        %td= r.total_area
+    %tr
+      %th S отапливаемая
+      - for r in @room_params do
+        %td= r.heat_area
+    %tr
+      %th S по норме
+      - for r in @room_params do
+        %td= r.quota_area
+    %tr
+      %th Счетчик
+      - for r in @room_params do
+        %td= r.calc_device
+    %tr
+      %th Счетчик(дата)
+      - for r in @room_params do
+        %td= r.date_calc_device.to_date.to_s=='1899-12-31' ? '' : r.date_calc_device.to_date
+    %tr
+      %th Бойлер
+      - for r in @room_params do
+        %td= r.boiler
+    %tr
+      %th Колонка
+      - for r in @room_params do
+        %td= r.water_heater
+    %tr
+      %th Отопление
+      - for r in @room_params do
+        %td= r.type_heating
+    %tr
+      %th Отопление(дата)
+      - for r in @room_params do
+        %td= r.date_heating.to_date.to_s=='1899-12-31' ? '' : r.date_heating.to_date
+= render :partial => 'bottom_data'        
+
+      

@@ -1,0 +1,12 @@
+%h1 Список организаций
+.content
+  %table.data
+    %tr
+      %th Код
+      %th Название
+    - for f in @firms
+      %tr
+        %td= f.code
+        %td= link_to f.name, :action => 'show', :id => f.code
+  .actions
+    = link_to 'Add', :action => 'new'

@@ -1,0 +1,17 @@
+%h1
+  = submit
+  регион
+.content
+  - form_for @region do |form|
+    %table.card
+      %tr
+        %th
+          = form.label "Код"
+        %td= form.text_field :code
+      %tr
+        %th
+          = form.label "Описание"
+        %td= form.text_field :description
+    %br
+  
+    = submit_tag submit

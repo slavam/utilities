@@ -1,0 +1,30 @@
+%h1 Отделение банка
+
+.content
+  %table.card
+    %tr
+      %th МФО:
+      %td=h @bankunit.mfo
+    %tr
+      %th Название:
+      %td=h @bankunit.name.to_utf
+    -#%tr
+      -#%th Адрес:
+      -#%td= link_to h(@bankunit.city.city_type.short_name+' '+@bankunit.city.name_rus+', '+@bankunit.address), :controller => "zips", :action => 'show_map', :lat => @bankunit.lat, :long => @bankunit.long, :name => @bankunit.name
+    %tr
+      %th Телефон
+      %td=h @bankunit.phone
+    %tr
+      %th Руководитель
+      %td=h @bankunit.manager.to_utf
+    - if @bankunit.filials.size>0
+      %tr
+        %th Филиалы
+        - for filial in @bankunit.filials do
+          %tr
+            %td= link_to filial.name.to_utf, filial_path(filial)
+  .actions
+    -#- if current_user.admin?
+      -#= link_to 'Добавить филиал', new_filial_path
+      -#= link_to 'Edit', edit_bankunit_path(@bankunit)
+      -#= link_to 'Delete', bankunit_path(@bankunit), :method => :delete, :confirm => "Do you really want to delete bankunit?"

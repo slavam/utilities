@@ -1,0 +1,23 @@
+%h1
+  Edit password
+- form_for @current_user, :url => password_path do |f|
+  = f.error_messages
+  %table.card
+    %tr
+      %th
+        = f.label :current_password
+      %td
+        = f.password_field :current_password
+    %tr
+      %th
+        = f.label :password
+      %td
+        = f.password_field :password
+    %tr
+      %th
+        = f.label :password_confirmation
+      %td
+        = f.password_field :password_confirmation
+  %br
+    = submit_tag 'Update'
+

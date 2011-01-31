@@ -1,0 +1,11 @@
+%h1 Street list of #{link_to @city.name_rus, city_path(@city)}
+.content
+  - form_for (:street_location, @street_location, :url => details_city_path(@city), :html => { :method => :post}) do |f|
+    %table.card
+      %tr
+        %th Name
+        %td= f.select(:id, StreetLocation.all.map {|s| [s.name, s.id]} )
+        %td= submit_tag 'Details'
+  .actions
+    = link_to 'Add', :action => 'new'
+

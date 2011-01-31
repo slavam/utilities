@@ -1,0 +1,23 @@
+%h1 Реквизиты улицы
+.content
+  %table.card
+    %tr
+      %th Код:
+      %td=h @street.id
+    %tr
+      %th Тип:
+      %td= @street.street_type.short_name.to_utf
+    %tr
+      %th Название 1:
+      %td= @street.name.to_utf
+    %tr
+      %th Название 2:
+      %td=h @street.second_name.to_utf
+  %br
+  
+  
+  .actions
+    = link_to 'Редактировать', edit_street_location_path(@street)
+    -#= link_to 'Delete', street_location_path(@street), :method => :delete, :confirm => "Do you ready to delete street?"
+    -#= link_to 'Дома', homes_street_location_path(@street)
+  

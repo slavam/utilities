@@ -1,0 +1,20 @@
+%h1 Филиал банка
+
+.content
+  %table.card
+    %tr
+      %th Название:
+      %td=h @filial.name
+    %tr
+      %th Адрес:
+      %td= link_to h(@filial.city.city_type.short_name+' '+@filial.city.name_rus+', '+@filial.address), :controller => "zips", :action => 'show_map', :lat => @filial.lat, :long => @filial.long, :name => @filial.name
+    %tr
+      %th Телефон
+      %td=h @filial.phone
+    %tr
+      %th Руководитель
+      %td=h @filial.manager
+  .actions
+    - if current_user.admin?
+      = link_to 'Edit', edit_filial_path(@filial)
+      = link_to 'Delete', filial_path(@filial), :method => :delete, :confirm => "Do you really want to delete filial?"

@@ -1,0 +1,15 @@
+%h1
+  = submit
+  City
+.content
+  - form_for @city do |form|
+    = form.error_messages
+    %table.card
+      %tr
+        %th
+          = form.label :name_rus
+        %td
+          = form.text_field :name_rus
+    %br
+  
+    = submit_tag submit

@@ -1,0 +1,9 @@
+%h1 Выберите улицу в #{@city.city_type.short_name.to_utf+' '+@city.name_rus.to_utf}
+
+.content
+  - form_for :streets, :url => house_locations_path, :html => {:method => :get} do 
+    %table
+      %tr
+        %th= "Улицы:"
+        %td= select(:street, :id, @streets.map {|s| [s.name.to_utf+' '+s.street_type.short_name.to_utf, s.id]} )
+    = submit_tag "Дома"

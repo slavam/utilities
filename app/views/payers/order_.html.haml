@@ -1,0 +1,52 @@
+%h1 ИЗВЕЩЕНИЕ
+.content
+  - @data = []
+  - s = 0
+  %table.card
+    %tr
+      %th Код ЕРЦ
+      %td= @human.code_erc
+    %tr
+      %th Фамилия, имя, отчество
+      %td= @human.full_name
+    %tr
+      %th Адрес  
+      %td= @human.address
+.content
+  %table.card
+    %tr
+      %th Услуга
+      %th Начало периода
+      %th Конец периода
+      %th Долги
+      %th Начисления 
+      %th Сейчас
+      %th Было
+      %th Разность
+      %th Сумма
+    - for d in @debts do
+      %tr
+        %td= d.utility
+        %td= date_select :order, :start, :order => [:day, :month, :year], :use_month_numbers => true
+        %td= date_select :order, :end, :order => [:day, :month, :year], :use_month_numbers => true
+        %td= d.sum_dolg
+        %td= d.sum_month 
+        - s = s+d.sum_month.to_f
+        - if d.utility_id == 8 || d.utility_id ==20 || d.utility_id ==21 || d.utility_id ==22 || d.utility_id ==38 || d.utility_id ==41
+          %td= text_field_tag :today, 0, :size => 6
+          %td= text_field_tag :last, d.end_count, :size => 6
+          %td= text_field_tag :delta, d.month_count, :size => 6
+        - else
+          %td= ""
+          %td= ""
+          %td= ""
+        %td= text_field_tag :total, d.sum_month, :size => 5
+        - @data << [d.utility, :start, "По", :today, :last, :delta, :total]
+    %tr
+      %td{:colspan => 8}= "<b>ИТОГО </b>"
+      %td= s
+      - delta = s
+-#    = submit_tag "Распечатать"
+.actions
+  =link_to 'Распечатать', :action => 'order_print', :code_erc => @human.code_erc, :id_city => @human.id_city
+      

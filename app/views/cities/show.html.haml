@@ -1,0 +1,37 @@
+%h1 #{@city.name_rus}
+
+.content
+  %table.card
+    %tr
+      %th
+        Код:
+      %td
+        =h @city.id
+    %tr
+      %th
+        Тип:
+      %td
+        =h @city.city_type.full_name
+    %tr
+      %th
+        Название:
+      %td
+        =h @city.name_rus
+    %tr
+      %th
+        Название 2
+      %td
+        =h @city.name_ukr
+    %tr
+      %th
+        Подчиненность:
+      %td
+        =h @region_name
+    %tr
+      %th
+        Код КОАТУУ:
+      %td
+        =h @city.code_koatuu
+  
+  .actions
+    = link_to 'Улицы', :controller => 'street_locations', :action => 'index', :city_id => @city

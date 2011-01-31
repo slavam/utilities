@@ -1,0 +1,40 @@
+%h1 ИЗВЕЩЕНИЕ
+.content
+  - s = 0
+  %table.card
+    %tr
+      %th Код ЕРЦ
+      %td= @human.code_erc
+    %tr
+      %th Фамилия, имя, отчество
+      %td= @human.full_name.to_utf
+    %tr
+      %th Адрес  
+      %td= @human.address.to_utf
+.content
+  - form_for "line[]", @debts, :url => {:action => "order_print", :code_erc => @human.code_erc, :id_city => @human.id_city} do |f| 
+    %table.card
+      %tr 
+        %th Услуга
+        %th Начало периода
+        %th Конец периода
+        %th Долги
+        %th Начисления 
+        %th Сумма
+      - for @debt in @debts do
+        %tr 
+          %td= @debt.utility.to_utf
+          %td= date_select :order, :start, :order => [:day,:month, :year], :use_month_numbers => true, :index => @debt.id
+          %td= date_select :order, :end, :order => [:day, :month, :year], :use_month_numbers => true, :index => @debt.id
+          %td= @debt.sum_dolg
+          %td= @debt.sum_month 
+          - s = s+@debt.sum_month.to_f
+          -#%td= @debt.sum_month 
+          %td= text_field :debt, :sum_month, :index => @debt.id, :size => 5 
+      %tr
+        %td{:colspan => 5}= "<b>ИТОГО </b>"
+        %td= s
+    = submit_tag "Распечатать"
+.actions
+-#  =link_to 'Сохранить', :action => 'save_print', :code_erc => @human.code_erc, :id_city => @human.id_city
+      

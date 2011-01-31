@@ -1,0 +1,41 @@
+# coding: utf-8
+= render :partial => 'main_data'
+%h1 ИЗВЕЩЕНИЕ
+.content
+  - s = 0.00
+  -#- form_for "line[]", @debts, :url => {:controller => "orders", :action => "create", :human_id => @human.id, :period_id => @debts[0].id_period} do |f| 
+  - form_for "line[]", @debts, :url => {:action => "order_print", :id => @human.id, :period_id => @debts[0].id_period, :format => 'pdf'} do |f| 
+    %table.card
+      %tr
+        %th Услуга
+        -#%th Начало периода
+        -#%th Конец периода
+        %th Долги
+        %th Начисления 
+        %th Сумма
+        %th Счетчики
+      - for @debt in @debts do
+        %tr
+          %td= @debt.utility.to_utf
+          -#%td= date_select :order, :start, :order => [:day, :month, :year], :use_month_numbers => true, :index => @debt.id
+          -#%td= date_select :order, :end, :order => [:day, :month, :year], :use_month_numbers => true, :index => @debt.id
+          %td= @debt.sum_dolg
+          %td= @debt.sum_month 
+          - @debt.sum_month = @debt.sum_month.to_f+@debt.sum_dolg.to_f
+          - s = s+@debt.sum_month.to_f
+          %td= text_field :debt, :sum_month, :index => @debt.id, :size => 5
+          -#%td= text_field :debt, :sum_month, :index => @debt.id, :size => 5
+          -#%td= text_field :debt, :id_bankbook_utility, :index => @debt.id, :size => 5
+          - if (@debt.code_utility.to_i == 8 or @debt.code_utility.to_i == 20 or @debt.code_utility.to_i == 21 or @debt.code_utility.to_i == 39) 
+            %td=link_to 'Показания', :controller => 'counters', :action => 'index', :bankbook_utility_id => @debt.id_bankbook_utility
+      %tr
+        %td{:colspan => 3}= "ИТОГО "
+        %td= s
+    -#= submit_tag "Сохранить"
+    = submit_tag "Распечатать"
+-#= calendar_date_select_tag "e_date", nil, :embedded => true, :year_range => 10.years.ago..0.years.ago    
+-#= calendar_date_select_tag "e_date"    
+-# .actions
+-#  =link_to 'Распечатать', order_path(@order, :format=> "pdf")
+-#  =link_to 'Распечатать', :action => 'order_print', :code_erc => @human.code_erc, :id_city => @human.id_city, :sum => s, :dat => dat
+      

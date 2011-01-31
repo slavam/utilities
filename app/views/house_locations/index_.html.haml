@@ -1,0 +1,12 @@
+%h1 Выберите дом #{@street.city.city_type.short_name+' '+@street.city.name_rus+', '+@street.street_type.short_name+' '+@street.name}
+
+.content
+  - form_for :homes, :url => room_locations_path, :html => {:method => :get} do 
+    %table
+      %tr
+        %th= "Дома:"
+        %td= select(:house, :id, @houses.map {|h| [h.house.n_house.to_s+ | 
+          (h.house.f_house>0 ? '-'+h.house.f_house.to_s : '')+ | 
+          (h.house.d_house>0 ? '/'+h.house.d_house.to_s : '')+ |
+          (h.house.a_house>'' ? '"'+h.house.a_house+'"' : ''), h.id]} ) |
+    = submit_tag "Квартиры"

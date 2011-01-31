@@ -1,0 +1,22 @@
+= render :partial => 'main_data'
+%h1 Долги на #{@period.date_b.to_date}
+.content
+  %table.card
+    %tr
+      %th Организация
+      %th Счет
+      %th Услуга
+      %th Долги
+      %th Начисления
+    - for d in @debts do
+      %tr
+        %td= link_to d.firm.to_utf, :controller => 'firms', :action => 'show', :id => d.code_firm
+        %td= d.bank_book.to_utf
+        %td= d.utility.to_utf
+        %td= d.sum_dolg
+        %td= d.sum_month
+        -# if (current_user.admin? and (d.code_utility.to_i == 8 or d.code_utility.to_i == 20 or d.code_utility.to_i == 21 or d.code_utility.to_i == 39)) 
+          -#%td=link_to 'Показания', :controller => 'counters', :action => 'index', :bankbook_utility_id => d.id_bankbook_utility
+= render :partial => 'bottom_data'  
+
+      

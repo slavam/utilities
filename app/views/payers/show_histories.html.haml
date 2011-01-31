@@ -1,0 +1,30 @@
+= render :partial => 'main_data'
+%h1 История платежей
+.content
+  %table.card
+    %tr
+      %th{:colspan => 6} 
+      %th Период оплаты
+    %tr
+      %th Дата платежа
+      %th Счет
+      %th Организация
+      %th Услуга
+      %th Место приема
+      %th Сумма
+      %th Начало
+      %th Окончание
+      %th Номер операции
+    - for h in @histories do
+      %tr
+        %td= h.date_p.to_date
+        %td= h.bank_book
+        %td= h.firm.to_utf
+        %td= h.utility.to_utf
+        %td= h.ward_name.to_utf
+        %td= h.summ
+        %td= h.dateb.to_date
+        %td= h.datee.to_date
+        %td= h.nop
+= render :partial => 'bottom_data'        
+

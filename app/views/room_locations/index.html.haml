@@ -1,0 +1,15 @@
+%h1 Выберите квартиру в #{@house.street_location.city.city_type.short_name.to_utf+' '+ |
+  @house.street_location.city.name_rus.to_utf+', '+@house.street_location.street_type.short_name.to_utf+' '+ |
+  @house.street_location.name.to_utf+', дом '+@house.house.n_house.to_s+ |
+  (@house.house.f_house>0 ? '-'+@house.house.f_house.to_s : '')+ |
+  (@house.house.d_house>0 ? '/'+@house.house.d_house.to_s : '')+ |
+  (@house.house.a_house>'' ? '"'+@house.house.a_house.to_utf+'"' : '')} |
+
+.content
+  - form_for :rooms, :url => {:controller => "payers", :action => "find_payer_by_address"}, :html => {:method => :get } do 
+    %table
+      %tr
+        %th= "Квартиры:"
+        %td= select(:room, :id, @rooms.map {|r| [r.room.n_room.to_s+ | 
+          (r.room.a_room>'' ? '"'+r.room.a_room.to_utf+'"' : ''), r.id]} ) |
+    = submit_tag "Найти"

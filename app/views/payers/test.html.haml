@@ -1,0 +1,42 @@
+= render :partial => 'main_data'      
+%h1 Долги на #{@period.description.to_utf}
+.content
+  %table.card
+    %tr
+      %th Фирма
+      %th Счет
+      %th Услуга
+      %th Долг
+      %th Начислено
+      %th Счетчик
+      %th Сейчас
+      %th Было
+      %th Количество
+    - for d in @human.bankbooks do
+      %tr
+        - for u in d.bankbook_utilities do
+          %tr
+            %td= link_to d.firm.name.to_utf, :controller => 'firms', :action => 'show', :id => d.code_firm
+            %td= d.bank_book.to_utf
+            %td= u.utility.name.to_utf
+            - debt = u.bankbook_attributes_debts :condition => ["id_period = ? ", @period.id]
+            %td= debt[0].sum_dolg
+            %td= debt[0].sum_month
+            - if u.counters.size>0
+              - for c in u.counters do
+                %tr
+                  %td{:colspan => 5}
+                  %td= c.description.to_utf
+                  - crs = c.counter_readings.all :order => "date DESC"
+                  %td= crs[0].value
+                  - delta = crs[0].value
+                  - if crs.size==1
+                    %td= 0
+                  - else
+                    %td= crs[1].value
+                    - delta = crs[0].value - crs[1].value
+                  %td= delta
+                  %td= link_to "Показания", :controller => "counter_readings", :action => 'index', :counter_id => c.id 
+= render :partial => 'bottom_data'                  
+-#.actions
+  -#= link_to 'Edit', edit_payer_path(@human)

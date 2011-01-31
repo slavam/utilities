@@ -1,0 +1,12 @@
+%h1 Введите свои данные
+.content
+  - form_tag humans_path, :metod => 'get' do
+    %table.card
+      %tr
+        %th Населенный пункт:
+        %td= select(:city, :id, City.find(:all, :conditions => ["lastGenErcCode>0"]).map {|c| [c.name_rus, c.id]} )
+      %tr
+        %th Код плательщика:
+        %td= text_field_tag :code_erc, params[:code_erc]
+    = submit_tag "Просмотреть информацию"
+    

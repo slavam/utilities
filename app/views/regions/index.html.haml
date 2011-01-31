@@ -1,0 +1,14 @@
+%h1 Административные образования Донецкой области 
+
+.content
+  %table.data
+    %tr
+      %th Код
+      %th Описание
+    - for r in @regions
+      %tr
+        %td= r.code
+        %td= r.description
+  .actions
+    = link_to 'Добавить', :action => 'new'
+    

@@ -1,0 +1,97 @@
+= render :partial => 'main_data'
+%h1 Льготы за #{@period.description.to_utf}
+.content
+  %table.card
+    %tr
+      %th Организация-Услуга-Счет
+      - for e in @exemptions do
+        %th= e.code_firm.to_s+'-'+e.utility.to_utf+'-'+e.bank_book
+    %tr
+      %th Долг на 01.12.2006
+      - for e in @exemptions do
+        %td= e.sum_01122006
+    %tr
+      %th Дата договора на реструктуризацию долга
+      - for e in @exemptions do
+        %td= e.date_dog.to_date.to_s=='1899-12-31' ? '' : e.date_dog.to_date
+    %tr
+      %th Код льготы 1
+      - for e in @exemptions do
+        %td= e.code_lg1
+    %tr
+      %th Пользователей льготой 1
+      - for e in @exemptions do
+        %td= e.count_tn_lg1
+    %tr
+      %th Дата начисления льготы 1
+      - for e in @exemptions do
+        %td= e.date_lg1.to_date.to_s=='1899-12-31' ? '' : e.date_lg1.to_date
+    %tr
+      %th Размер льготы 1 в процентах
+      - for e in @exemptions do
+        %td= e.rate_lg1
+    %tr
+      %th Код льготы 2
+      - for e in @exemptions do
+        %td= e.code_lg2
+    %tr
+      %th Пользователей льготой 2
+      - for e in @exemptions do
+        %td= e.count_tn_lg2
+    %tr
+      %th Дата начисления льготы 2
+      - for e in @exemptions do
+        %td= e.date_lg2.to_date.to_s=='1899-12-31' ? '' : e.date_lg2.to_date
+    %tr
+      %th Размер льготы 2 в процентах
+      - for e in @exemptions do
+        %td= e.rate_lg2
+    %tr
+      %th Код льготы 3
+      - for e in @exemptions do
+        %td= e.code_lg3
+    %tr
+      %th Пользователей льготой 3
+      - for e in @exemptions do
+        %td= e.count_tn_lg3
+    %tr
+      %th Дата начисления льготы 3
+      - for e in @exemptions do
+        %td= e.date_lg3.to_date.to_s=='1899-12-31' ? '' : e.date_lg3.to_date
+    %tr
+      %th Размер льготы 3 в процентах
+      - for e in @exemptions do
+        %td= e.rate_lg3
+    %tr
+      %th Код льготы 4
+      - for e in @exemptions do
+        %td= e.code_lg4
+    %tr
+      %th Пользователей льготой 4
+      - for e in @exemptions do
+        %td= e.count_tn_lg4
+    %tr
+      %th Дата начисления льготы 4
+      - for e in @exemptions do
+        %td= e.date_lg4.to_date.to_s=='1899-12-31' ? '' : e.date_lg4.to_date
+    %tr
+      %th Размер льготы 4 в процентах
+      - for e in @exemptions do
+        %td= e.rate_lg4
+    %tr
+      %th Код льготы 5
+      - for e in @exemptions do
+        %td= e.code_lg5
+    %tr
+      %th Пользователей льготой 5
+      - for e in @exemptions do
+        %td= e.count_tn_lg5
+    %tr
+      %th Дата начисления льготы 5
+      - for e in @exemptions do
+        %td= e.date_lg5.to_date.to_s=='1899-12-31' ? '' : e.date_lg5.to_date
+    %tr
+      %th Размер льготы 5 в процентах
+      - for e in @exemptions do
+        %td= e.rate_lg5
+= render :partial => 'bottom_data'

@@ -1,0 +1,26 @@
+# coding: utf-8
+%h1 Список населенных пунктов
+
+.content
+  %table.data
+    %tr
+      %th ID
+      %th Код
+      %th Тип
+      %th Название
+      %th Центр
+    - for city in @cities
+      %tr
+        %td
+          =h(city.id)
+        %td
+          =h(city.code_koatuu)
+        %td
+          =h city.city_type.short_name
+        %td 
+          = link_to h(city.name_rus), :action => 'show', :id => city
+        %td
+          =h(city.id_parent)
+  .actions
+    = link_to 'Добавить', :action => 'new'
+

@@ -1,0 +1,20 @@
+# coding: utf-8
+%h1 Улицы #{link_to @city.city_type.short_name.to_utf+' '+@city.name_rus.to_utf, city_path(@city)}
+
+.content
+  %table.data
+    %tr
+      %th ID
+      %th Тип
+      %th Название
+    - for street in @street_locations
+      %tr
+        %td
+          =h(street.id)
+        %td
+          =h street.street_type.short_name.to_utf
+        %td 
+          = link_to h(street.name.to_utf), :action => 'show', :id => street
+  .actions
+    = link_to 'Добавить', :action => 'new'
+

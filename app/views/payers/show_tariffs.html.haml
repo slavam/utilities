@@ -1,0 +1,22 @@
+= render :partial => 'main_data'
+%h1 Тарифы за #{@period.description.to_utf}
+.content
+  %table.card
+    %tr
+      %th Фирма
+      %th Счет
+      %th Услуга
+      %th Норма расхода воды
+      %th Дата ввода нормы
+      %th Тариф
+      %th Тариф фактический
+    - for t in @tariffs do
+      %tr
+        %td= t.code_firm.to_s
+        %td= t.bank_book
+        %td= t.utility.to_utf
+        %td= t.watercharge
+        %td= t.date_wc.to_date.to_s=='1899-12-31' ? '' : t.date_wc.to_date
+        %td= t.tarif
+        %td= t.tarif_f
+= render :partial => 'bottom_data'      

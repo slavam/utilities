@@ -1,0 +1,16 @@
+%h1 Реквизиты плательщика
+.content
+  %table.card
+    %tr
+      %th Код плательщика:
+      %td= @human.code_erc
+    %tr
+      %th Фамилия, имя, отчество:
+      %td= @human.full_name.to_utf
+    %tr
+      %th Адрес:  
+      %td= @human.address
+.action
+  =link_to 'Паспорт >', :action => 'passport', :id => @human.id
+  =link_to 'Счет на оплату >', :action => 'order', :id => @human.id
+      

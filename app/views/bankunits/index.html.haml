@@ -1,0 +1,13 @@
+%h1 Отделения Донецкого областного управления 
+
+.content
+  %table.data
+    %tr
+      %th Название
+    - for bu in @bankunits
+      %tr
+        %td= link_to bu.name.to_utf, bankunit_path(bu)
+  .actions
+    -#- if current_user.admin?
+      -#= link_to 'Добавить', :action => 'new'
+    

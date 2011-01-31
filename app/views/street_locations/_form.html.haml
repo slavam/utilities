@@ -1,0 +1,17 @@
+# coding: utf-8
+%h1
+  = submit
+.content
+  - form_for @street do |form|
+    %table.card
+      %tr
+        %th= form.label :id
+        %td= form.label @street.id
+      %tr
+        %th= form.label :name
+        %td= form.text_field :name
+
+    %br
+    = submit_tag submit
+    %br
+        

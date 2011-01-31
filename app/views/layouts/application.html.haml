@@ -1,0 +1,77 @@
+# coding: utf-8
+!!! strict
+%html
+  %head
+    %title Oschadbank
+    %meta{ 'http-equiv' => 'Content-Type', :content => 'text/html; charset=UTF-8' }
+    = stylesheet_link_tag 'application'
+    = javascript_include_tag :defaults, :cache => true
+    -#= calendar_date_select_includes "silver"
+
+
+  %body
+  #header
+    %h1 Донецкое областное управление Ощадбанка
+  #search
+    %h3 Введите свои данные
+    .content
+      - form_for :human, :url => { :controller => "payers", :action => "search" }, :method => "get" do 
+        %table
+          %tr
+            %th= "Населенный пункт:"
+            %td= select(:city, :id, City.find(:all, :conditions => ["id_parent in (select id from cities where lastGenErcCode>0)"]).map {|c| [c.name_rus.to_utf, c.id]} )
+          %tr
+            %th= "Код плательщика:"
+            %td= text_field_tag :code_erc, params[:code_erc], :size => 9
+          %tr
+            %th= "Номер дома:"
+            %td= text_field_tag :home, params[:home], :size => 5
+          %tr 
+            %th= "Номер квартиры:"
+            %td= text_field_tag :room, params[:room], :size => 5 
+        = submit_tag "Найти"
+    
+    #navigation
+      %br
+      #tabs
+        %ul
+          - if not true
+            = render :partial => 'layouts/menuItem', :collection => [ |
+              ['Login', new_user_session_url]                        |
+            ] |
+            -
+          - else
+            %div{'style' => "float: left;"}
+              = render :partial => 'layouts/menuItem', :collection => [ |
+                ['Города', cities_path],     |
+                ['Организации', firms_path],     |
+                ['Квитанции',  orders_path], |
+                ['Услуги', new_user_session_url],            |
+                ['Подразделения', bankunits_path]            |
+              ] |
+            - 
+            -##div{'style' => "float: left;margin-left: 30px"}
+              -#= render :partial => 'layouts/menuItem', :collection => [ |
+              -#['Услуги', new_user_session_url],            |
+                -#['Domains', '#'], |
+                -#['Google apps', '#'], |
+                -#['Other', '#'] |
+              -#] |
+            -#-
+            %div{'style' => "float: right;"}
+              = csrf_meta_tag
+              = render :partial => 'layouts/menuItem', :collection => [               |
+                ['Your profile', profile_path],                               |
+                ['Admin settings', settings_path, nil, (!current_user or !current_user.admin?)], |
+                ['Logout', user_session_path, { :method => :delete }]         |
+              ] |
+            -
+
+    #main
+      - flash.each do |key, msg|
+        = content_tag :div, msg, :class => "flash_#{key}"
+      %div{'style' => "clear: both;"}
+      &nbsp;
+      = yield
+      %div{'style' => "clear: both;"}
+    #footer

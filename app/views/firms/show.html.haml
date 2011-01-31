@@ -1,0 +1,17 @@
+%h1 Характеристики организации
+.content
+  %table.card
+    %tr
+      %th Код:
+      %td= @firm.code
+    %tr
+      %th Название:
+      %td=h @firm.name
+    %tr
+      %th Адрес:
+      %td=h @firm.legal_address
+    %tr
+      %th Руководитель:
+      %td= @firm.info_manager
+.actions
+  = link_to 'Create PDF', firm_path(@firm.code, :format => "pdf")

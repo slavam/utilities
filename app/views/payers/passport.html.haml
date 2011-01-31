@@ -1,0 +1,22 @@
+%h1 Паспорт абонента
+.content
+  %table.card
+    %tr
+      %th Код:
+      %td= @human.code_erc
+    %tr
+      %th Фамилия, имя, отчество:
+      %td= @human.full_name.to_utf
+    %tr
+      %th Адрес:  
+      %td= @human.address
+    %tr
+      %th Штрих-код:  
+      %td= image_tag "foo.png"
+  %br
+.actions
+  =link_to 'Распечатать', :action => 'passport_print', :id => @human.id, :format => 'pdf'
+  
+  
+
+      

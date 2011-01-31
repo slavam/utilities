@@ -1,0 +1,9 @@
+%h1 Выберите населенный пункт
+
+.content
+  - form_for :streets, :url => { :controller => "street_locations", :action => "actual_streets" }, :html => {:method => :get} do 
+    %table
+      %tr
+        %th= "Населенный пункт:"
+        %td= select(:city, :id, @cities.map {|c| [c.name_rus.to_utf, c.id]} )
+    = submit_tag "Улицы"

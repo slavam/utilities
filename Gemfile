@@ -17,6 +17,7 @@ gem "pdf-reader", ">=0.9.0"
 gem 'rghost'
 gem 'rghost_barcode'
 #gem 'jquery-rails', '>= 0.2.6'
+gem "jquery-rails"
 #gem 'calendar_date_select', :git => 'http://github.com/paneq/calendar_date_select.git', :branch => 'rails3test'
 
 # Use unicorn as the web server

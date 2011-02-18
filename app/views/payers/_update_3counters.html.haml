@@ -1,0 +1,52 @@
+%td
+  %div{:id => 'sum_'+@debt.id_bankbook_utility.to_s}
+    = text_field :debt, :sum_month, :index => @debt.id, :size => 5
+    =text_field_tag 'id_'+@debt.id_bankbook_utility.to_s, @debt.id_bankbook_utility, :type => :hidden
+%td= @debt.tarif.to_f
+=text_field_tag 't_'+@debt.id_bankbook_utility.to_s, @debt.tarif.to_f, :type => :hidden
+    
+%td
+  %div{:id => 'now1_'+@debt.id_bankbook_utility.to_s}
+    - @debt.end_count = @debt.end_count.to_f
+    = text_field :debt, :end_count, :index => @debt.id, :size => 4
+    =text_field_tag 'id_'+@debt.id_bankbook_utility.to_s, @debt.id_bankbook_utility, :type => :hidden
+%td
+  %div{:id => 'old1_'+@debt.id_bankbook_utility.to_s}
+    - @debt.month_count = @debt.end_count.to_f
+    = text_field :debt, :month_count, :index => @debt.id, :size => 4
+    =text_field_tag 'id_'+@debt.id_bankbook_utility.to_s, @debt.id_bankbook_utility, :type => :hidden
+%td
+  %div{:id => 'v1_'+@debt.id_bankbook_utility.to_s}
+    - @debt.month_count = 0
+    = @debt.month_count.to_f
+    
+%td
+  %div{:id => 'now2_'+@debt.id_bankbook_utility.to_s}
+    - @debt.end_count2 = @debt.end_count2.to_f
+    = text_field :debt, :end_count2, :index => @debt.id, :size => 4
+    =text_field_tag 'id_'+@debt.id_bankbook_utility.to_s, @debt.id_bankbook_utility, :type => :hidden
+%td
+  %div{:id => 'old2_'+@debt.id_bankbook_utility.to_s}
+    - @debt.month_count2 = @debt.end_count2.to_f
+    = text_field :debt, :month_count2, :index => @debt.id, :size => 4
+    =text_field_tag 'id_'+@debt.id_bankbook_utility.to_s, @debt.id_bankbook_utility, :type => :hidden
+%td
+  %div{:id => 'v2_'+@debt.id_bankbook_utility.to_s}
+    - @debt.month_count2 = 0
+    = @debt.month_count2.to_f
+    
+%td
+  %div{:id => 'now3_'+@debt.id_bankbook_utility.to_s}
+    - @debt.end_count3 = @debt.end_count3.to_f
+    = text_field :debt, :end_count3, :index => @debt.id, :size => 4
+    =text_field_tag 'id_'+@debt.id_bankbook_utility.to_s, @debt.id_bankbook_utility, :type => :hidden
+%td
+  %div{:id => 'old3_'+@debt.id_bankbook_utility.to_s}
+    - @debt.month_count3 = @debt.end_count3.to_f
+    = text_field :debt, :month_count3, :index => @debt.id, :size => 4
+    =text_field_tag 'id_'+@debt.id_bankbook_utility.to_s, @debt.id_bankbook_utility, :type => :hidden
+%td
+  %div{:id => 'v3_'+@debt.id_bankbook_utility.to_s}
+    - @debt.month_count3 = 0
+    = @debt.month_count3.to_f
+  

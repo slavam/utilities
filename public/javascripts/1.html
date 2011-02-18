@@ -1,0 +1,46 @@
+<html>
+<head>
+<title>jQuery Hello World</title>
+ 
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="application.js"></script>
+ 
+</head>
+ 
+<script type="text/javascript">
+ 
+$(document).ready(function(){
+ $("#flag").html("Hello World !! (display due to jQuery)");
+});
+ 
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+$("a").bind('click', function() {  
+ alert('Unobtrusive!');  
+});  
+});  
+</script>
+
+
+
+<body>
+<font color=red> 
+Hello World !! (display due to HTML)
+</font>
+<font color=blue>
+<div id="flag">
+</div>
+<div id="flag2">
+<a href='#'>Link</a>  
+</div>
+</font>
+
+<font color="red">CLICK BELOW BUTTON TO SEE ALERT BOX</font>
+<br>
+<br>
+<button id="cl">Click Me</button>
+</body>
+</html> 

@@ -1,0 +1,8 @@
+%h1 Показания счетчиков
+= form_for :debt, @debt, :url => {:controller => 'payers', :action => "update_count_debt"} do |f|
+  = f.text_field :id_period
+  = submit_tag "Обновить"  
+  
+  
+
+      

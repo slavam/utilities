@@ -13,7 +13,7 @@
         %td= link_to d.firm.to_utf, :controller => 'firms', :action => 'show', :id => d.code_firm
         %td= d.bank_book.to_utf
         %td= d.utility.to_utf
-        %td= d.sum_dolg
+        %td= d.sum_dolg.to_utf
         %td= d.sum_month
         -# if (current_user.admin? and (d.code_utility.to_i == 8 or d.code_utility.to_i == 20 or d.code_utility.to_i == 21 or d.code_utility.to_i == 39)) 
           -#%td=link_to 'Показания', :controller => 'counters', :action => 'index', :bankbook_utility_id => d.id_bankbook_utility

@@ -39,14 +39,18 @@ Utilities::Application.routes.draw do |map|
   resources :counter_readings do
   end 
 
+  resources :bankbook_attributes_debts do
+  end 
+  
+
 #  match ':payers/:order_print/:code_erc/:id_city'
 #  match 'payers/:code_erc/:id_city' => 'payers#order_print', :via => :post
   resources :payers do
 #    get 'order_print', :on => :member
     collection do
-      post :search, :order_print, :calc
+      post :search, :order_print, :update_count_debt
       get :show, :order, :test, :debt, :passport, :passport_print, :show_payers, :show_housing, :show_tariffs,
-        :show_exemptions, :show_histories, :find_payer_by_address, :order_print
+        :show_exemptions, :show_histories, :find_payer_by_address, :order_print, :update_counters
     end
   end 
 

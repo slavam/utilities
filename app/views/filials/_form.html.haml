@@ -1,0 +1,42 @@
+%h1
+  = submit
+  филиал
+.content
+  - form_for @filial do |form|
+    = form.error_messages
+    %table.card
+      %tr
+        %th
+          = form.label "Название"
+        %td= form.text_field :name
+      %tr
+        %th
+          = form.label "Населенный пункт"
+        %td= collection_select :filial, :city_id, City.all, :id, :name_rus
+      %tr
+        %th
+          = form.label "Отделение"
+        %td= collection_select :filial, :bankunit_id, Bankunit.all, :id, :name
+      %tr
+        %th
+          = form.label "Адрес"
+        %td= form.text_field :address
+      %tr
+        %th
+          = form.label "Телефон"
+        %td= form.text_field :phone
+      %tr
+        %th
+          = form.label "Руководитель"
+        %td= form.text_field :manager
+      %tr
+        %th
+          = form.label "Широта"
+        %td= form.text_field :lat
+      %tr
+        %th
+          = form.label "Долгота"
+        %td= form.text_field :long
+    %br
+  
+    = submit_tag submit

@@ -1,0 +1,15 @@
+%div{:id => @debt.id_bankbook_utility}
+  %td= text_field :debt, :sum_month, :index => @debt.id, :size => 5
+  %td= @debt.tarif
+  -if ((@debt.end_count.to_f>0) or (@debt.end_count2.to_f>0) or (@debt.end_count2.to_f>0))
+    -if (@debt.end_count.to_f>0)
+      %td= @debt.end_count
+      %td= @debt.month_count
+    -if (@debt.end_count2.to_f>0)
+      %td= @debt.end_count2
+      %td= @debt.month_count2
+    -if (@debt.end_count3.to_f>0)
+      %td= @debt.end_count3
+      %td= @debt.month_count3
+  %td= link_to 'Обновить', update_counters_payers_path, :remote => true, :class => 'update_counters'
+	

@@ -2,11 +2,10 @@ require 'rubygems'
 require 'prawn'
 require 'rghost'
 require 'rghost_barcode'
-#require 'calendar_date_select'
 include RGhost
 class PayersController < ApplicationController
-  before_filter :find_human, :except => [:search, :find_payer_by_address]
-  before_filter :get_city_id, :except => [:find_payer_by_address, :show]
+  before_filter :find_human, :except => [:search, :find_payer_by_address, :update_counters]
+  before_filter :get_city_id, :except => [:find_payer_by_address, :show, :update_counters]
   before_filter :find_period, :only => [:show, :show_payers, :show_housing, :show_tariffs, :show_exemptions, 
     :order, :order_print, :debt, :test]
   before_filter :find_payers, :only => [:show_payers]
@@ -17,15 +16,36 @@ class PayersController < ApplicationController
   before_filter :find_order, :only => [:order]
   before_filter :find_history, :only => [:show_histories]
 
-  def calc
-#    respond_to do |format|
-#      format.js do
-#        number = params[:number]
-#        render(:update) do |page|
-#          page.replace_html 'area_code_results_message',""
+  def update_count_debt
+    redirect_to :action => "order", :id => 1
+  end
+  
+  def update_counters
+#    find_debt
+    respond_to do |format|
+      format.js do
+        render (:update) do |page|
+          page['.update_counters'].insert_html :bottom, :partial => 'update_3counters'
+#                                      :object => @survey.questions.build
+        end
+#        render (:update) do |page|
+#          page.alert('Something is not right here')
+#          page.replace_html ".update_counters", ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+#          page['.update_counters'].hide # same thing as $('my_div').hide
 #        end
-#      end
-#    end
+#        number = params[:number]
+#       render(:update) do |page|
+#          page.replace_html  'update_counters', :partial => 'update_counters'
+#         page['search'].hide
+#         page.replace "search", ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+#         page.replace_html 'area_code_results_message',""
+#       end
+      end
+    end
+##    respond_to do |format|
+##      format.html { redirect_to(posts_url) }
+##      format.js  { render :nothing => true }
+##    end
   end
 
   def test
@@ -51,12 +71,13 @@ class PayersController < ApplicationController
   
   def order_print
     RGhost::Config::GS[:path]='C:\gs\gs9.00\bin\gswin32.exe'
-    i = 0
+#    i = 0
 #    for d in @debts  do
 #      d.sum_month = params[:debt][i]["sum_month"]
 #      i += 1
 #    end
     output = Notice.new(:page_size => "A4", :page_layout => :landscape, :margin => 10).to_pdf @human, @debts, params[:debt]
+
     respond_to do |format|
       format.pdf do
         send_data output, :filename => "order.pdf", :type => "application/pdf", :format => 'pdf'
@@ -275,5 +296,9 @@ class PayersController < ApplicationController
 #        inner join file_registrations on(bankbook_payments.id_file = file_registrations.id)
 #        left join bankbook_attributes_tarifs t on bu.id=t.id_bankbook_utility')
 # order by date_p desc,firm_name,plat_name       
+  end
+  def find_debt
+    @debt = BankbookAttributesDebt.find(:first,
+      :conditions => ["id_bankbook_utility=? and id_period=?", params[:debt_id], params[:period_id]])
   end
 end

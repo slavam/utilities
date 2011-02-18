@@ -1,7 +1,7 @@
  <html><head><title>Test</title>
-<%= GMap.header %>
-<%= @map.to_html %>
+<%= raw(GMap.header(:with_vml => false, :host => request.host).html_safe) %>
+<%= raw(@map.to_html) %>
 </head><body>
-<%= @map.div(:width => 600, :height => 400) %>
+<%= raw(@map.div(:width => 600, :height => 400)) %>
 </body></html>
 

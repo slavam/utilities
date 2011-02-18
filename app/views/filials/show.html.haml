@@ -1,0 +1,21 @@
+# coding: utf-8
+%h1 Филиал банка
+
+.content
+  %table.card
+    %tr
+      %th Название:
+      %td=h @filial.name.to_utf
+    %tr
+      %th Адрес:
+      %td= link_to h(@filial.city.city_type.short_name.to_utf+' '+@filial.city.name_rus.to_utf+', '+@filial.address.to_utf), :controller => "zips", :action => 'show_map', :lat => @filial.lat, :long => @filial.long, :name => @filial.name.to_utf
+    %tr
+      %th Телефон
+      %td=h @filial.phone.to_utf
+    %tr
+      %th Руководитель
+      %td=h @filial.manager.to_utf
+  .actions
+    -#- if current_user.admin?
+      = link_to 'Edit', edit_filial_path(@filial)
+      = link_to 'Delete', filial_path(@filial), :method => :delete, :confirm => "Do you really want to delete filial?"

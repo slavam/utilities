@@ -1,4 +1,5 @@
 # coding: utf-8
+
 = render :partial => 'main_data'
 %h1 ИЗВЕЩЕНИЕ
 .content
@@ -7,7 +8,7 @@
   - form_for "line[]", @debts, :url => {:action => "order_print", :id => @human.id, :period_id => @debts[0].id_period, :format => 'pdf'} do |f| 
     %table.card
       %tr
-        %th{:colspan => 8}
+        %th{:colspan => 9}
         %th= "Счетчики"
       %tr
         %th{:colspan => 6}
@@ -35,76 +36,14 @@
           %td= @debt.sum_dolg
           %td= @debt.sum_month.to_utf 
           - s = s+@debt.sum_month.to_f
-          - @debt.sum_month = number_to_currency(@debt.sum_month.to_f+@debt.sum_dolg.to_f, :unit => "")
+          -# @debt.sum_month = number_to_currency(@debt.sum_month.to_f+@debt.sum_dolg.to_f, :unit => "")
+          - @debt.sum_month = number_to_currency(@debt.sum_month.to_f, :unit => "")
           - if (@debt.code_utility.to_i == 8 or @debt.code_utility.to_i == 20 or @debt.code_utility.to_i == 21 or @debt.code_utility.to_i == 39) 
-            - if (@debt.code_utility.to_i == 8)
-              %td= text_field_tag :sum_8, 0, :size => 5
-              %td= @debt.tarif
-              %td= text_field_tag :now1_8, @debt.end_count.to_i, :size => 4
-              %td= text_field_tag :old1_8, @debt.end_count.to_i, :size => 4
-              %td= text_field_tag :val1_8, '', :size => 4
-              = observe_field 'now1_8', :frequency => 0.25, :function => "my_method_8();"
-              = observe_field 'old1_8', :frequency => 0.25, :function => "my_method_8();"
-              = observe_field 'val1_8', :frequency => 0.25, :function => "update_sum8(#{@debt.tarif});"
-              %td= text_field_tag :now2_8, @debt.end_count2.to_i, :size => 4
-              %td= text_field_tag :old2_8, @debt.end_count2.to_i, :size => 4
-              %td= text_field_tag :val2_8, '', :size => 4
-              = observe_field 'now2_8', :frequency => 0.25, :function => "my_method_8();"
-              = observe_field 'old2_8', :frequency => 0.25, :function => "my_method_8();"
-              = observe_field 'val2_8', :frequency => 0.25, :function => "update_sum8(#{@debt.tarif});"
-              %td= text_field_tag :now3_8, @debt.end_count3.to_i, :size => 4
-              -#%td= text_field :debt, :end_count3, :index => @debt.id, :size => 5
-              %td= text_field_tag :old3_8, @debt.end_count3.to_i, :size => 4
-              -#%td= @debt.end_count3.to_f > 0 ? @debt.end_count3 : "0"
-              %td= text_field_tag :val3_8, '', :size => 4
-              -#%td= 0 
-              = observe_field 'now3_8', :frequency => 0.25, :function => "my_method_8();"
-              = observe_field 'old3_8', :frequency => 0.25, :function => "my_method_8();"
-              = observe_field 'val3_8', :frequency => 0.25, :function => "update_sum8(#{@debt.tarif});"
-            - else 
-              - if (@debt.code_utility.to_i == 20)
-                %td= text_field_tag 'sum1_20', 0, :size => 5
-                %td= @debt.tarif
-                %td= text_field_tag 'number_20', @debt.end_count.to_i, :size => 5
-                = observe_field :number_20, :frequency => 0.25, :function => "my_method_20(value, #{@debt.end_count.to_i}, #{@debt.tarif});"
-                %td= @debt.end_count.to_f > 0 ? number_with_precision(@debt.end_count, :precision => 2) : "0"
-                %td= text_field_tag number_with_precision('val1_20', :precision => 2), '', :size => 5
-                %td= text_field :debt, :end_count2, :index => @debt.id, :size => 5
-                %td= @debt.end_count2.to_f > 0 ? @debt.end_count2 : "0"
-                %td= 0 
-                %td= text_field :debt, :end_count3, :index => @debt.id, :size => 5
-                %td= @debt.end_count3.to_f > 0 ? @debt.end_count3 : "0"
-                %td= 0 
-              - else 
-                - if (@debt.code_utility.to_i == 21)  
-                  %td= text_field_tag 'sum1_21', 0, :size => 5
-                  %td= @debt.tarif
-                  %td= text_field_tag 'number_21', @debt.end_count.to_i, :size => 5
-                  = observe_field :number_21, :frequency => 0.25, :function => "my_method_21(value, #{@debt.end_count.to_i}, #{@debt.tarif});"
-                  %td= @debt.end_count.to_f > 0 ? number_with_precision(@debt.end_count, :precision => 2) : "0"
-                  %td= text_field_tag number_with_precision('val1_21', :precision => 2), '', :size => 5
-                  %td= text_field :debt, :end_count2, :index => @debt.id, :size => 5
-                  %td= @debt.end_count2.to_f > 0 ? @debt.end_count2 : "0"
-                  %td= 0 
-                  %td= text_field :debt, :end_count3, :index => @debt.id, :size => 5
-                  %td= @debt.end_count3.to_f > 0 ? @debt.end_count3 : "0"
-                  %td= 0 
-                - else
-                  %td= text_field_tag 'sum1_39', 0, :size => 5
-                  %td= @debt.tarif
-                  %td= text_field_tag 'number_39', @debt.end_count.to_i, :size => 5
-                  = observe_field :number_39, :frequency => 0.25, :function => "my_method(value, #{@debt.end_count.to_i}, #{@debt.tarif});"
-                  %td= @debt.end_count.to_f > 0 ? number_with_precision(@debt.end_count, :precision => 2) : "0"
-                  %td= text_field_tag number_with_precision('val1_39', :precision => 2), '', :size => 5
-                  %td= text_field :debt, :end_count2, :index => @debt.id, :size => 5
-                  %td= @debt.end_count2.to_f > 0 ? @debt.end_count2 : "0"
-                  %td= 0 
-                  %td= text_field :debt, :end_count3, :index => @debt.id, :size => 5
-                  %td= @debt.end_count3.to_f > 0 ? @debt.end_count3 : "0"
-                  %td= 0 
-            -#%td=link_to 'Показания', :controller => 'counters', :action => 'index', :bankbook_utility_id => @debt.id_bankbook_utility
+            = render :partial => 'update_3counters'
           - else
-            %td= text_field :debt, :sum_month, :index => @debt.id, :size => 5
+            %td
+              %div{:id => 'sum_'+@debt.id_bankbook_utility.to_s}
+                = text_field :debt, :sum_month, :index => @debt.id, :size => 5
       %tr
         %td{:colspan => 3}= "ИТОГО "
         %td= number_to_currency(s, :unit => "грн.", :format => "%n %u")

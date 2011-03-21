@@ -46,7 +46,7 @@
                 ['Города', cities_path],     |
                 ['Организации', firms_path],     |
                 ['Квитанции',  orders_path], |
-                ['Услуги', new_user_session_url],            |
+                ['Услуги', (current_user ? {:controller => "cities", :action => "index_active_cities"} : new_user_session_url)],            |
                 ['Подразделения', bankunits_path]            |
               ] |
             - 

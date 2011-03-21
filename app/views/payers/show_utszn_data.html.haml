@@ -1,0 +1,244 @@
+= render :partial => 'main_data'
+%h1 Данные на #{@period.date_b.to_date}
+.content
+  %table.card
+    %tr
+      %th Организация
+      - for d in @utszn_data do
+        %td= link_to d.name.to_utf, :controller => 'firms', :action => 'show', :id => d.code_firm
+    %tr
+      %th Счет
+      - for d in @utszn_data do
+        %td= d.bank_book.to_utf
+    %tr
+      %th Услуга
+      - for d in @utszn_data do
+        %td= d.utility.to_utf
+    %tr
+      %th Плательщик
+      - for d in @utszn_data do
+        %td= d.full_name.to_utf
+    %tr
+      %th Зарегистрировано
+      - for d in @utszn_data do
+        %td= d.resident_number
+    %tr
+      %th Дата долга
+      - for d in @utszn_data do
+        %td= d.date_dolg.to_date
+    %tr
+      %th sum_isp
+      - for d in @utszn_data do
+        %td= d.sum_isp
+    %tr
+      %th Долги
+      - for d in @utszn_data do
+        %td= d.sum_dolg.to_utf
+    %tr
+      %th sum_dolg1
+      - for d in @utszn_data do
+        %td= d.sum_dolg1
+    %tr
+      %th Начисления
+      - for d in @utszn_data do
+        %td= d.sum_month
+    %tr
+      %th sum_norec
+      - for d in @utszn_data do
+        %td= d.sum_norec
+    %tr
+      %th sum_recalculation
+      - for d in @utszn_data do
+        %td= d.sum_recalculation
+    %tr
+      %th month_count
+      - for d in @utszn_data do
+        %td= d.month_count
+    %tr
+      %th month_count2
+      - for d in @utszn_data do
+        %td= d.month_count2
+    %tr
+      %th month_count3
+      - for d in @utszn_data do
+        %td= d.month_count3
+    %tr
+      %th end_count
+      - for d in @utszn_data do
+        %td= d.end_count
+    %tr
+      %th end_count2
+      - for d in @utszn_data do
+        %td= d.end_count2
+    %tr
+      %th end_count3
+      - for d in @utszn_data do
+        %td= d.end_count3
+    %tr
+      %th sum_pay
+      - for d in @utszn_data do
+        %td= d.sum_pay
+    %tr
+      %th sum_01122006
+      - for d in @utszn_data do
+        %td= d.sum_01122006
+    %tr
+      %th date_dog
+      - for d in @utszn_data do
+        %td= d.date_dog.to_date.to_s > '1901-01-01' ? d.date_dog.to_date : ''
+    %tr
+      %th code_lg1
+      - for d in @utszn_data do
+        %td= d.code_lg1
+    %tr
+      %th count_tn_lg1
+      - for d in @utszn_data do
+        %td= d.count_tn_lg1
+    %tr
+      %th date_lg1
+      - for d in @utszn_data do
+        %td= d.date_lg1.to_date.to_s > '1901-01-01' ? d.date_lg1.to_date : ''
+    %tr
+      %th rate_lg1
+      - for d in @utszn_data do
+        %td= d.rate_lg1
+    %tr
+      %th code_lg2
+      - for d in @utszn_data do
+        %td= d.code_lg2
+    %tr
+      %th count_tn_lg2
+      - for d in @utszn_data do
+        %td= d.count_tn_lg2
+    %tr
+      %th date_lg2
+      - for d in @utszn_data do
+        %td= d.date_lg2.to_date.to_s > '1901-01-01' ? d.date_lg2.to_date : ''
+    %tr
+      %th rate_lg2
+      - for d in @utszn_data do
+        %td= d.rate_lg2
+    %tr
+      %th code_lg3
+      - for d in @utszn_data do
+        %td= d.code_lg3
+    %tr
+      %th count_tn_lg3
+      - for d in @utszn_data do
+        %td= d.count_tn_lg3
+    %tr
+      %th date_lg3
+      - for d in @utszn_data do
+        %td= d.date_lg3.to_date.to_s > '1901-01-01' ? d.date_lg3.to_date : ''
+    %tr
+      %th rate_lg3
+      - for d in @utszn_data do
+        %td= d.rate_lg3
+    %tr
+      %th code_lg4
+      - for d in @utszn_data do
+        %td= d.code_lg4
+    %tr
+      %th count_tn_lg4
+      - for d in @utszn_data do
+        %td= d.count_tn_lg4
+    %tr
+      %th date_lg4
+      - for d in @utszn_data do
+        %td= d.date_lg4.to_date.to_s > '1901-01-01' ? d.date_lg4.to_date : ''
+    %tr
+      %th rate_lg4
+      - for d in @utszn_data do
+        %td= d.rate_lg4
+    %tr
+      %th code_lg5
+      - for d in @utszn_data do
+        %td= d.code_lg5
+    %tr
+      %th count_tn_lg5
+      - for d in @utszn_data do
+        %td= d.count_tn_lg5
+    %tr
+      %th date_lg5
+      - for d in @utszn_data do
+        %td= d.date_lg5.to_date.to_s > '1901-01-01' ? d.date_lg5.to_date : ''
+    %tr
+      %th rate_lg5
+      - for d in @utszn_data do
+        %td= d.rate_lg5
+    %tr
+      %th one_roomed_flat
+      - for d in @utszn_data do
+        %td= d.one_roomed_flat
+    %tr
+      %th lift
+      - for d in @utszn_data do
+        %td= d.lift
+    %tr
+      %th date_privatization
+      - for d in @utszn_data do
+        %td= d.date_privatization.to_date.to_s > '1901-01-01' ? d.date_privatization.to_date : ''
+    %tr
+      %th form_property
+      - for d in @utszn_data do
+        %td= d.form_property
+    %tr
+      %th total_area
+      - for d in @utszn_data do
+        %td= d.total_area
+    %tr
+      %th heat_area
+      - for d in @utszn_data do
+        %td= d.heat_area
+    %tr
+      %th quota_area
+      - for d in @utszn_data do
+        %td= d.quota_area
+    %tr
+      %th calc_device
+      - for d in @utszn_data do
+        %td= d.calc_device
+    %tr
+      %th date_calc_device
+      - for d in @utszn_data do
+        %td= d.date_calc_device.to_date.to_s > '1901-01-01' ? d.date_calc_device.to_date : ''
+    %tr
+      %th type_calc_device
+      - for d in @utszn_data do
+        %td= d.type_calc_device
+    %tr
+      %th boiler
+      - for d in @utszn_data do
+        %td= d.boiler
+    %tr
+      %th water_heater
+      - for d in @utszn_data do
+        %td= d.water_heater
+    %tr
+      %th type_heating
+      - for d in @utszn_data do
+        %td= d.type_heating
+    %tr
+      %th date_heating
+      - for d in @utszn_data do
+        %td= d.date_heating.to_date.to_s > '1901-01-01' ? d.date_heating.to_date : ''
+    %tr
+      %th watercharge
+      - for d in @utszn_data do
+        %td= d.watercharge
+    %tr
+      %th date_wc
+      - for d in @utszn_data do
+        %td= d.date_wc.to_date.to_s > '1901-01-01' ? d.date_wc.to_date : ''
+    %tr
+      %th tarif
+      - for d in @utszn_data do
+        %td= d.tarif
+    %tr
+      %th tarif_f
+      - for d in @utszn_data do
+        %td= d.tarif_f
+        
+= render :partial => 'bottom_data'  
+
+      

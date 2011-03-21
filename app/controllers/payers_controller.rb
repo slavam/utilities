@@ -7,10 +7,10 @@ class PayersController < ApplicationController
   before_filter :find_human, :except => [:search, :find_payer_by_address, :update_counters]
   before_filter :get_city_id, :except => [:find_payer_by_address, :show, :update_counters]
   before_filter :find_period, :only => [:show, :show_payers, :show_housing, :show_tariffs, :show_exemptions, 
-    :order, :order_print, :debt, :test]
+    :order, :order_print, :debt, :test, :show_utszn_data]
   before_filter :find_payers, :only => [:show_payers]
   before_filter :find_room_params, :only => [:show_housing]
-  before_filter :find_debts, :only => [:show, :order, :order_print, :debt]
+  before_filter :find_debts, :only => [:show, :order, :order_print, :debt, :show_utszn_data]
   before_filter :find_tariffs, :only => [:show_tariffs]
   before_filter :find_exemptions, :only => [:show_exemptions]
   before_filter :find_order, :only => [:order]
@@ -182,8 +182,30 @@ class PayersController < ApplicationController
       flash_error 'code_erc_absent'
       redirect_to firms_path
     else
-      redirect_to :action => "show", :id => @human.id
+#      redirect_to :action => "show", :id => @human.id
+      redirect_to :action => "show_utszn_data", :id => @human.id
     end
+  end
+  
+  def show_utszn_data
+    @utszn_data = Payer.find(:all,
+      :select => 'f.name, u.name utility, bb.code_firm, bb.bank_book, ha.* , bad.*, bal.*, bar.*, bat.* ',
+      :conditions => ["humans.id=? and bad.id_period =? 
+        and ? between ha.id_period_begin and ha.id_period
+        and ? between bar.id_period_begin and bar.id_period
+        and ? between bat.id_period_begin and bat.id_period
+        and ? between bal.id_period_begin and bal.id_period", 
+        @human.id, @period.id, @period.id, @period.id, @period.id, @period.id],
+      :joins => 'inner join bankbooks bb on humans.id=bb.id_human 
+        inner join bankbook_utilities bu on bu.id_bankbook = bb.id
+        inner join utilities u on u.code = bu.code_utility
+        inner join firms f on f.code = bb.code_firm
+        inner join bankbook_attributes_debts bad on bad.id_bankbook_utility = bu.id
+        inner join bankbook_attributes_lgots bal on bal.id_bankbook_utility = bu.id
+        inner join bankbook_attributes_tarifs bat on bat.id_bankbook_utility = bu.id
+        inner join bankbook_attributes_rooms bar on bar.id_bankbook = bb.id
+        inner join bankbook_attributes_humans ha on bb.id=ha.id_bankbook')
+    
   end
   
   private
@@ -217,7 +239,8 @@ class PayersController < ApplicationController
   def find_payers
     @payers = Payer.find(:all,
       :select => 'bb.code_firm, bb.bank_book, ha.* ',
-      :conditions => ["humans.id=? and ha.id_period=?", @human.id, @period.id],
+      :conditions => ["humans.id=? and ha.id_period>=? and ha.id_period_begin<=?", 
+        @human.id, @period.id, @period.id],
       :joins => 'left join bankbooks bb on humans.id=bb.id_human 
         left join bankbook_attributes_humans ha on bb.id=ha.id_bankbook')
   end
@@ -225,7 +248,8 @@ class PayersController < ApplicationController
   def find_room_params
     @room_params = Payer.find(:all,
       :select => 'bb.code_firm, bb.bank_book, ra.* ',
-      :conditions => ["humans.id=? and ra.id_period=?", @human.id, @period.id],
+      :conditions => ["humans.id=? and ra.id_period>=? and ra.id_period_begin<=?", 
+        @human.id, @period.id, @period.id],
       :joins => 'left join bankbooks bb on humans.id=bb.id_human 
         left join bankbook_attributes_rooms ra on bb.id=ra.id_bankbook')
   end
@@ -259,7 +283,8 @@ class PayersController < ApplicationController
   def find_tariffs
     @tariffs = Payer.find(:all,
       :select => 'bb.code_firm, bb.bank_book, bu.code_utility, f.name firm, u.name utility, t.* ',
-      :conditions => ["humans.id=? and t.id_period=?", @human.id, @period.id],
+      :conditions => ["humans.id=? and t.id_period>=? and t.id_period_begin<=?", 
+        @human.id, @period.id, @period.id],
       :joins => 'left join bankbooks bb on humans.id=bb.id_human
         left join firms f on bb.code_firm=f.code
         left join bankbook_utilities bu on bb.id=bu.id_bankbook

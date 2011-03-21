@@ -33,7 +33,7 @@
       - for @debt in @debts do
         %tr
           %td= @debt.utility.to_utf
-          %td= @debt.sum_dolg
+          %td= @debt.sum_dolg.to_utf
           %td= @debt.sum_month.to_utf 
           - s = s+@debt.sum_month.to_f
           -# @debt.sum_month = number_to_currency(@debt.sum_month.to_f+@debt.sum_dolg.to_f, :unit => "")

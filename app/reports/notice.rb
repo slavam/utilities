@@ -9,51 +9,38 @@ class Notice < Prawn::Document
     text "Код ЕРЦ: " 
     font "#{Prawn::BASEDIR}/data/fonts/aricyrb.ttf";
     bl = y - bounds.absolute_bottom + 2
-    draw_text sub.code_erc.to_s+'  Счет на оплату жилищно-коммунальных и прочих услуг на '+
-      debts[0].date_dolg.to_date.to_s, :at => [45, bl]
-#    stroke_line [0, bl], [0, bl + font.ascender]
+    draw_text sub.code_erc.to_s+'  Счет на оплату жилищно-коммунальных и прочих услуг за '+
+      (debts[0].date_dolg - 1.month).strftime("%B %Y "), :at => [45, bl]
     font "#{Prawn::BASEDIR}/data/fonts/aricyr.ttf"
     text "Адрес: "+sub.address+' '+sub.full_name.to_utf
 
-#    draw_text "Код ЕРЦ: "+sub.code_erc.to_s, :at => [bounds.width-250, bl]
     bounding_box [(bounds.width-250), bounds.top], :width => 250 do
-      text "Код ЕРЦ: "+sub.code_erc.to_s+" Извещение за "+debts[0].date_dolg.to_date.to_s+" Адрес: "+
+      text "Код ЕРЦ: "+sub.code_erc.to_s+" Извещение за "+
+#        I18n.l(debts[0].date_dolg, :format => :short)+
+        (debts[0].date_dolg - 1.month).strftime("%B %Y ")+" Адрес: "+
         sub.address+' '+sub.full_name.to_utf
     end
  
     font_size 7
     
-#    move_text_position 16
-#    stroke_horizontal_rule    
-#    font "#{Prawn::BASEDIR}/data/fonts/aricyrb.ttf"
-#   font "#{Prawn::BASEDIR}/data/fonts/DejaVuSans.ttf"
-#    text "заполняется абонентом", :indent_paragraphs => 450
     font "#{Prawn::BASEDIR}/data/fonts/aricyr.ttf"
     data = []
     s = 0
     i = 0
     for d in debts do
-#      from = counters[i]["start(3i)"]+'.'+counters[i]["start(2i)"]+'.'+counters[i]["start(1i)"]
-#      to = counters[i]["end(3i)"]+'.'+counters[i]["end(2i)"]+'.'+counters[i]["end(1i)"]
       debt = 0.0
       if d.sum_dolg.to_f != 0 
         if d.sum_dolg.to_f > 0
-          debt = d.sum_dolg+ "\n" +' долг' 
+          debt = d.sum_dolg.to_utf+ "\n" +'долг' 
         else
-          debt = d.sum_dolg+ "\n" +' переплата'
+          debt = d.sum_dolg.to_utf+ "\n" +'переплата'
 #          debt = BigDecimal(d.sum_dolg).ceil(2).abs.to_f.to_s+ "\n" +' переплата'
         end
       else
-        debt = '0'
+        debt = ''
       end
       
 #      s = s+d.sum_month.to_f
-      volume = ''
-      case d.utility_id 
-        when 1 then volume = d.total_area.to_s+'м2'
-        when 2, 5, 10 then volume = d.resident_number.to_s+'чел.'
-        when 7 then volume = d.heat_area.to_s+'м2'
-      end
       benefits = ''
       benefits = (d.rate_lg1.to_f > 0.04 or d.rate_lg2.to_f > 0.04 or d.rate_lg3.to_f > 0.04 or d.rate_lg4.to_f > 0.04 or d.rate_lg5.to_f > 0.04) ? ' льг. ' : ' без льгот'
       benefits = benefits +
@@ -69,16 +56,8 @@ class Notice < Prawn::Document
 #        (d.end_count2.to_f > 0 ? ' сч2:'+ d.end_count2.to_s : '') +
 #        (d.end_count3.to_f > 0 ? ' сч3:'+ d.end_count3.to_s : '')
 
-      cw = [35, 55, 30, 35, 25, 35, 40]
-      seven_cells = make_table([[d.sum_dolg1, d.utility.to_utf, volume,
-        d.sum_month, d.sum_recalculation, '0', debt]], :column_widths => cw, :cell_style => {:padding => 2})
-      two_cells = make_table([['Л.счет № '+d.bank_book+' '+
-        d.full_name.to_utf+
-        (d.resident_number > 0 ? ' прож. '+d.resident_number.to_s : '')+
-        (d.tarif.to_f > 0 ? ' тариф '+d.tarif.to_s+'грн/'+d.unit.to_utf : '')+
-        benefits 
-#        + counts_values
-        ],[seven_cells]], :column_widths => [255])
+      volume = ''
+      cw = [40, 55, 30, 35, 25, 35, 40]
       ccw = [40, 40, 40, 30]
       if ((counters[i]["end_count"]).to_f > 0 or (counters[i]["end_count2"]).to_f > 0 or (counters[i]["end_count3"]).to_f > 0)
         counters_values = make_table([
@@ -95,9 +74,33 @@ class Notice < Prawn::Document
             (counters[i]["end_count3"]),
             ((counters[i]["end_count3"]).to_f-(counters[i]["month_count3"]).to_f).to_s] : [])],
           :column_widths => ccw, :cell_style => {:padding => 2})
+            volume = ((counters[i]["end_count"]).to_f-(counters[i]["month_count"]).to_f +
+              (counters[i]["end_count2"]).to_f-(counters[i]["month_count2"]).to_f +
+              (counters[i]["end_count3"]).to_f-(counters[i]["month_count3"]).to_f).to_s
       else
         counters_values = make_table([["","","",""]], :column_widths => ccw)
       end
+
+      case d.utility_id 
+        when 1 then volume = d.total_area.to_s+'м2'
+        when 2, 5, 10 then volume = (d.resident_number > 0 ? d.resident_number.to_s+'чел.' : '')
+        when 7 then volume = d.heat_area.to_s+'м2'
+        when 8, 20, 21, 39, 41 then
+          if ((counters[i]["end_count"]).to_f > 0 or (counters[i]["end_count2"]).to_f > 0 or (counters[i]["end_count3"]).to_f > 0)
+#            volume = volume+"м3"
+          end    
+      end
+      seven_cells = make_table([[d.sum_dolg1.to_utf, d.utility.to_utf, volume,
+        d.sum_month, d.sum_recalculation, '0', debt]], :column_widths => cw, :cell_style => {:padding => 2})
+      two_cells = make_table([['Л.счет № '+d.bank_book+' '+
+        d.full_name.to_utf+
+        (d.resident_number > 0 ? ' прож. '+d.resident_number.to_s : '')+
+        (d.tarif.to_f > 0 ? ' тариф '+d.tarif.to_s+'грн/'+d.unit.to_utf : '')+
+        benefits 
+#        + counts_values
+        ],[seven_cells]], :column_widths => [260])
+      
+      
       counter_name = ''
       case d.utility_id 
         when 8 then counter_name = "Электросчетчики"
@@ -120,13 +123,13 @@ class Notice < Prawn::Document
     end
     subheder1 = make_table([["Дата", "Нач.", "Кон.", "Разн."]], :column_widths => ccw, :cell_style => {:padding => 3})
     subheder2 = make_table([["Показания счетчиков"],[subheder1]])
-    headers = ["Поставщик услуг","Долг на "+debts[0].period.to_utf,
-      "Услуга","Объем","Начислено","Перерасчет","Оплачено","На "+debts[0].date_dolg.to_date.to_s,
+    headers = ["Поставщик услуг","Долг на "+(debts[0].date_dolg - 1.month).strftime("%d.%m.%Y"),
+      "Услуга","Объем","Начислено","Перерасчет","Оплачено","Долг на "+debts[0].date_dolg.strftime("%d.%m.%Y"),
       "Сумма платежа", subheder2, "", "Вид оплаты", "Сумма платежа", subheder2]
 
     move_down 10
 
-    chw = [80, 35, 55, 30, 35, 25, 35, 40, 50, 150, 10, 60, 40, 150]
+    chw = [80, 40, 55, 30, 35, 25, 35, 40, 50, 150, 10, 60, 40, 150]
 #    he = table([headers], :column_widths => chw, :row_colors => %w[cccccc ffffff], :cell_style => {:padding => [0,0]}, columns(0).align = :center)
     bl = y-10
     he = table([headers]) do |t|
@@ -137,7 +140,7 @@ class Notice < Prawn::Document
       t.columns(11..12).align = :center
     end  
     da = make_table(data) do |t|
-      t.column_widths  = [80, 255, 50, 150, 10, 60, 40, 150]
+      t.column_widths  = [80, 260, 50, 150, 10, 60, 40, 150]
 #      t.cells.style :padding => 2
 #      t.cell_style = {:padding => 3}
 #      t.columns(0).align = :center
@@ -221,14 +224,12 @@ table([["Subtable ->", subtable, "<-"]])
 #      stroke_bounds
 #  end
 number_helper = Object.new.extend(ActionView::Helpers::NumberHelper) 
-bl = y-20  
-draw_text "ИТОГО:       "+ number_helper.number_to_currency(s, :unit => "грн.", :format => "%n %u"), :at => [300, bl]
-draw_text "ИТОГО:      "+ number_helper.number_to_currency(s, :unit => "грн.", :format => "%n %u"), :at => [575, bl]
 bl = y-20
+font "#{Prawn::BASEDIR}/data/fonts/aricyrb.ttf";
+draw_text "ИТОГО:       "+ number_helper.number_to_currency(s, :unit => "грн.", :format => "%n %u"), :at => [300, bl]
 draw_text "Подпись плательщика______________", :at => [400, bl]
+draw_text "ИТОГО:       "+ number_helper.number_to_currency(s, :unit => "грн.", :format => "%n %u"), :at => [570, bl]
 draw_text "Подпись плательщика______________", :at => [660, bl]
-#   
-#  self.font_size = 9
 
     move_down 20
     stef = "public/images/slogan.png"  

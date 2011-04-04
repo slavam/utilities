@@ -1,8 +1,8 @@
 require 'rubygems'
 require 'prawn'
-require 'rghost'
-require 'rghost_barcode'
-include RGhost
+#require 'rghost'
+#require 'rghost_barcode'
+#include RGhost
 class PayersController < ApplicationController
   before_filter :find_human, :except => [:search, :find_payer_by_address, :update_counters]
   before_filter :get_city_id, :except => [:find_payer_by_address, :show, :update_counters]

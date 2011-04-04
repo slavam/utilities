@@ -5,20 +5,16 @@ gem 'rails', '3.0.5'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-# gem 'sqlite3-ruby', :require => 'sqlite3'
 gem 'activerecord-sqlserver-adapter'
+# ruby-odbc remove on linux
 gem 'ruby-odbc'
 gem 'haml'
 gem 'authlogic'
-#gem 'prawn', :git => "git://github.com/sandal/prawn.git", :tag => '0.10.2', :submodules => true
-#gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
 gem 'prawn', :submodules => true
 gem "pdf-reader", ">=0.9.0"
 gem 'rghost'
 gem 'rghost_barcode'
-#gem 'jquery-rails', '>= 0.2.6'
 gem "jquery-rails"
-#gem 'calendar_date_select', :git => 'http://github.com/paneq/calendar_date_select.git', :branch => 'rails3test'
 
 # Use unicorn as the web server
 # gem 'unicorn'

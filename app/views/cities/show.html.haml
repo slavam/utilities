@@ -1,4 +1,4 @@
-%h1 #{@city.name_rus}
+%h1 #{@city.name_rus.to_utf}
 
 .content
   %table.card
@@ -11,17 +11,17 @@
       %th
         Тип:
       %td
-        =h @city.city_type.full_name
+        =h @city.city_type.full_name.to_utf
     %tr
       %th
         Название:
       %td
-        =h @city.name_rus
+        =h @city.name_rus.to_utf
     %tr
       %th
         Название 2
       %td
-        =h @city.name_ukr
+        =h @city.name_ukr.to_utf
     %tr
       %th
         Подчиненность:

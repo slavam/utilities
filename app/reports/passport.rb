@@ -16,7 +16,8 @@ class Passport < Prawn::Document
       text sub.full_name.to_utf
       text sub.address
       
-      stef = "public/images/foo.png"  
+      stef = "public/images/psp_"+
+        sub.code_erc.to_s+".png"  
       image stef
     end
     render

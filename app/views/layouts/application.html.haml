@@ -19,7 +19,7 @@
         %table
           %tr
             %th= "Населенный пункт:"
-            %td= select(:city, :id, City.find(:all, :conditions => ["id_parent in (select id from cities where lastGenErcCode>0)"]).map {|c| [c.name_rus.to_utf, c.id]} )
+            %td= select(:city, :id, City.find(:all, :conditions => ["id_parent in (select id from cities where lastGenErcCode>0) and id_parent != 0 and id_type > 0"], :order => :name_rus).map {|c| [c.name_rus.to_utf, c.id]} )
           %tr
             %th= "Код плательщика:"
             %td= text_field_tag :code_erc, params[:code_erc], :size => 9

@@ -73,14 +73,14 @@ GEM
       rake (>= 0.8.7)
       thor (~> 0.14.4)
     rake (0.8.7)
-    rghost (0.8.7.4)
-    rghost_barcode (0.8)
-      rghost (>= 0.8.0)
+    rghost (0.8.7.5)
+    rghost_barcode (0.9)
     ruby-odbc (0.99994)
     thor (0.14.6)
     treetop (1.4.9)
       polyglot (>= 0.3.1)
     tzinfo (0.3.25)
+    will_paginate (2.3.15)
 
 PLATFORMS
   x86-mingw32
@@ -96,3 +96,4 @@ DEPENDENCIES
   rghost
   rghost_barcode
   ruby-odbc
+  will_paginate (= 2.3.15)

@@ -9,4 +9,6 @@ class City < ActiveRecord::Base
   has_many :filials
   belongs_to :city_type, :class_name => 'CityType', :foreign_key => 'id_type'
   validates_presence_of :name_rus
+  cattr_reader :per_page
+  @@per_page = 20
 end

@@ -1,19 +1,8 @@
 class FirmsController < ApplicationController
-#  before_filter :find_city_type
-#  before_filter :find_region, :except => :details
   before_filter :find_firm, :only => [:show, :edit, :update, :destroy]
-#  skip_before_filter
 
   def index
-    @firms = Firm.all(
-#    :select => "firms.*, fa.*, a.* ",
-      :conditions => "is_active = 1", 
-#      :joins => " inner join firm_accounts as fa on code=fa.code_firm 
-#        inner join firm_account_attributes as a on fa.id=a.id_firm_account", 
-      :order => :name)
-    for @firm in @firms 
-      @firm.name = @firm.name.to_utf
-    end
+    @firms = Firm.where("is_active = 1").order(:name).paginate :page => params[:page], :per_page => 20
   end
 
   def show
@@ -55,13 +44,6 @@ class FirmsController < ApplicationController
 
   def find_firm
     @firm = Firm.find params[:id]
-    @firm.name = @firm.name.to_utf
-    if @firm.legal_address
-      @firm.legal_address = @firm.legal_address.to_utf
-    end  
-    if @firm.info_manager
-      @firm.info_manager = @firm.info_manager.to_utf
-    end  
   end
  
 end

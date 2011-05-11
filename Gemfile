@@ -15,6 +15,7 @@ gem "pdf-reader", ">=0.9.0"
 gem 'rghost'
 gem 'rghost_barcode'
 gem "jquery-rails"
+gem 'will_paginate', '2.3.15'
 
 # Use unicorn as the web server
 # gem 'unicorn'

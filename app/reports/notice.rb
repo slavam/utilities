@@ -83,7 +83,7 @@ class Notice < Prawn::Document
 
       case d.utility_id 
         when 1 then volume = d.total_area.to_s+'м2'
-        when 2, 5, 10 then volume = (d.resident_number > 0 ? d.resident_number.to_s+'чел.' : '')
+        when 2, 5, 10 then volume = (d.resident_number.to_i > 0 ? d.resident_number.to_s+'чел.' : '')
         when 7 then volume = d.heat_area.to_s+'м2'
         when 8, 20, 21, 39, 41 then
           if ((counters[i]["end_count"]).to_f > 0 or (counters[i]["end_count2"]).to_f > 0 or (counters[i]["end_count3"]).to_f > 0)
@@ -94,7 +94,7 @@ class Notice < Prawn::Document
         d.sum_month, d.sum_recalculation, '0', debt]], :column_widths => cw, :cell_style => {:padding => 2})
       two_cells = make_table([['Л.счет № '+d.bank_book+' '+
         d.full_name.to_utf+
-        (d.resident_number > 0 ? ' прож. '+d.resident_number.to_s : '')+
+        (d.resident_number.to_i > 0 ? ' прож. '+d.resident_number.to_s : '')+
         (d.tarif.to_f > 0 ? ' тариф '+d.tarif.to_s+'грн/'+d.unit.to_utf : '')+
         benefits 
 #        + counts_values

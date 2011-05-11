@@ -7,6 +7,5 @@
     - for f in @firms
       %tr
         %td= f.code
-        %td= link_to f.name, :action => 'show', :id => f.code
-  .actions
-    = link_to 'Add', :action => 'new'
+        %td= link_to f.name.to_utf, :action => 'show', :id => f.code
+  = will_paginate @firms

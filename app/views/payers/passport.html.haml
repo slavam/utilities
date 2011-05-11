@@ -1,4 +1,4 @@
-%h1 Паспорт абонента
+%h1 Паспорт плательщика
 .content
   %table.card
     %tr
@@ -12,7 +12,7 @@
       %td= @human.address
     %tr
       %th Штрих-код:  
-      %td= image_tag "foo.png"
+      %td= image_tag "psp_"+@human.code_erc.to_s+".png"
   %br
 .actions
   =link_to 'Распечатать', :action => 'passport_print', :id => @human.id, :format => 'pdf'

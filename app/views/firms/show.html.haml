@@ -6,12 +6,10 @@
       %td= @firm.code
     %tr
       %th Название:
-      %td=h @firm.name
+      %td=h @firm.name.to_utf
     %tr
       %th Адрес:
-      %td=h @firm.legal_address
+      %td=h @firm.legal_address ? @firm.legal_address.to_utf : ''
     %tr
       %th Руководитель:
-      %td= @firm.info_manager
-.actions
-  = link_to 'Create PDF', firm_path(@firm.code, :format => "pdf")
+      %td= @firm.info_manager ? @firm.info_manager.to_utf : ''

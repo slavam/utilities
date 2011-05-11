@@ -1,8 +1,3 @@
-require 'rubygems'
-require 'prawn'
-#require 'rghost'
-#require 'rghost_barcode'
-#include RGhost
 class PayersController < ApplicationController
   before_filter :find_human, :except => [:search, :find_payer_by_address, :update_counters]
   before_filter :get_city_id, :except => [:find_payer_by_address, :show, :update_counters]
@@ -21,12 +16,10 @@ class PayersController < ApplicationController
   end
   
   def update_counters
-#    find_debt
     respond_to do |format|
       format.js do
-        render (:update) do |page|
+        render :update do |page|
           page['.update_counters'].insert_html :bottom, :partial => 'update_3counters'
-#                                      :object => @survey.questions.build
         end
 #        render (:update) do |page|
 #          page.alert('Something is not right here')
@@ -69,29 +62,14 @@ class PayersController < ApplicationController
   def show_exemptions
   end
   
-  def order_print
-    RGhost::Config::GS[:path]='C:\gs\gs9.00\bin\gswin32.exe'
-#    i = 0
-#    for d in @debts  do
-#      d.sum_month = params[:debt][i]["sum_month"]
-#      i += 1
-#    end
-    output = Notice.new(:page_size => "A4", :page_layout => :landscape, :margin => 10).to_pdf @human, @debts, params[:debt]
-
-    respond_to do |format|
-      format.pdf do
-        send_data output, :filename => "order.pdf", :type => "application/pdf", :format => 'pdf'
-      end
-    end
-  end
-
   def passport
     RGhost::Config::GS[:path]='C:\gs\gs9.00\bin\gswin32.exe'
     doc=RGhost::Document.new :paper => [5,3]
     doc.barcode_interleaved2of5(@human.code_erc.to_s, {:y => 1.3, :height=>1.5, 
       :border=>{:width=>4, :left=>15, :right=>15, :show=>true},  
-      :text=>{:offset=>[0, -12], :size=>11}})
-    doc.render :png, :filename => 'public/images/foo.png' 
+      :text=>{:offset=>[0, -14], :size=>14}})
+    doc.render :png, :filename => 'public/images/psp_'+
+      @human.code_erc.to_s+'.png' 
   end
 
   def passport_print
@@ -108,6 +86,18 @@ class PayersController < ApplicationController
       redirect_to :action => "show", :code_erc => params[:code_erc], :id_city => params[:id_city]  
     end
   end
+
+  def order_print
+    RGhost::Config::GS[:path]='C:\gs\gs9.00\bin\gswin32.exe'
+    output = Notice.new(:page_size => "A4", :page_layout => :landscape, :margin => 10).to_pdf @human, @debts, params[:debt]
+
+    respond_to do |format|
+      format.pdf do
+        send_data output, :filename => "order.pdf", :type => "application/pdf", :format => 'pdf'
+      end
+    end
+  end
+
 
 =begin
     if not @order
@@ -138,7 +128,8 @@ class PayersController < ApplicationController
   def search
     if params[:code_erc]>''
       if params[:home]>''
-        @human = Payer.find(:first, :conditions => ["code_erc=? and id_city=?", params[:code_erc], @id_city])
+#        @human = Payer.find(:first, :conditions => ["code_erc=? and id_city=?", params[:code_erc], @id_city])
+        @human = Payer.where("code_erc=? and id_city=?", params[:code_erc], @id_city).first
         if @human.room_location.house_location.house.n_house != params[:home].to_i
           flash_error 'wrong_home'
           redirect_to firms_path
@@ -169,20 +160,18 @@ class PayersController < ApplicationController
       flash_error 'code_erc_absent'
       redirect_to firms_path
     end
-#    redirect_to human_path   
   end
   
   def find_payer_by_address
     if params[:room_id]
-      @human = Payer.find(:first, :conditions => ["id_room_location=?", params[:room_id]])
+      @human = Payer.where("id_room_location=?", params[:room_id]).first
     else
-      @human = Payer.find(:first, :conditions => ["id_room_location=?", params[:room][:id]])
+      @human = Payer.where("id_room_location=?", params[:room][:id]).first
     end
     if !@human
       flash_error 'code_erc_absent'
       redirect_to firms_path
     else
-#      redirect_to :action => "show", :id => @human.id
       redirect_to :action => "show_utszn_data", :id => @human.id
     end
   end
@@ -267,10 +256,10 @@ class PayersController < ApplicationController
         left join utilities u on bu.code_utility=u.code 
         left join utility_types ut on u.id_type=ut.id 
         left join bankbook_attributes_debts d on bu.id=d.id_bankbook_utility
-        left join bankbook_attributes_lgots bal on bu.id=bal.id_bankbook_utility and bal.id_period=d.id_period
-        left join bankbook_attributes_tarifs bat on bu.id=bat.id_bankbook_utility and bat.id_period=d.id_period
-        left join bankbook_attributes_rooms bar on bb.id=bar.id_bankbook and bar.id_period=d.id_period
-        left join bankbook_attributes_humans bah on bb.id=bah.id_bankbook and bah.id_period=d.id_period
+        left join bankbook_attributes_lgots bal on bu.id=bal.id_bankbook_utility and bal.id_period>=d.id_period and bal.id_period_begin<=d.id_period
+        left join bankbook_attributes_tarifs bat on bu.id=bat.id_bankbook_utility and bat.id_period>=d.id_period and bat.id_period_begin<=d.id_period
+        left join bankbook_attributes_rooms bar on bb.id=bar.id_bankbook and bar.id_period>=d.id_period and bar.id_period_begin<=d.id_period
+        left join bankbook_attributes_humans bah on bb.id=bah.id_bankbook and bah.id_period>=d.id_period and bah.id_period_begin<=d.id_period
         left join periods p on p.id=d.id_period
         ')
 #        left join counters c on bu.id=c.bankbook_utility_id 

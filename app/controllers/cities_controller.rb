@@ -57,7 +57,6 @@ class CitiesController < ApplicationController
 
   private
   
-
   def find_city
     @city = City.find params[:id]
   end

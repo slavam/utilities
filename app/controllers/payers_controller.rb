@@ -68,8 +68,7 @@ class PayersController < ApplicationController
     doc.barcode_interleaved2of5(@human.code_erc.to_s, {:y => 1.3, :height=>1.5, 
       :border=>{:width=>4, :left=>15, :right=>15, :show=>true},  
       :text=>{:offset=>[0, -14], :size=>14}})
-    doc.render :png, :filename => 'public/images/psp_'+
-      @human.code_erc.to_s+'.png' 
+    doc.render :png, :filename => 'public/images/psp_'+@human.code_erc.to_s+'.png' 
   end
 
   def passport_print
@@ -128,7 +127,6 @@ class PayersController < ApplicationController
   def search
     if params[:code_erc]>''
       if params[:home]>''
-#        @human = Payer.find(:first, :conditions => ["code_erc=? and id_city=?", params[:code_erc], @id_city])
         @human = Payer.where("code_erc=? and id_city=?", params[:code_erc], @id_city).first
         if @human.room_location.house_location.house.n_house != params[:home].to_i
           flash_error 'wrong_home'
@@ -177,24 +175,17 @@ class PayersController < ApplicationController
   end
   
   def show_utszn_data
-    @utszn_data = Payer.find(:all,
-      :select => 'f.name, u.name utility, bb.code_firm, bb.bank_book, ha.* , bad.*, bal.*, bar.*, bat.* ',
-      :conditions => ["humans.id=? and bad.id_period =? 
-        and ? between ha.id_period_begin and ha.id_period
-        and ? between bar.id_period_begin and bar.id_period
-        and ? between bat.id_period_begin and bat.id_period
-        and ? between bal.id_period_begin and bal.id_period", 
-        @human.id, @period.id, @period.id, @period.id, @period.id, @period.id],
-      :joins => 'inner join bankbooks bb on humans.id=bb.id_human 
-        inner join bankbook_utilities bu on bu.id_bankbook = bb.id
-        inner join utilities u on u.code = bu.code_utility
-        inner join firms f on f.code = bb.code_firm
-        inner join bankbook_attributes_debts bad on bad.id_bankbook_utility = bu.id
-        inner join bankbook_attributes_lgots bal on bal.id_bankbook_utility = bu.id
-        inner join bankbook_attributes_tarifs bat on bat.id_bankbook_utility = bu.id
-        inner join bankbook_attributes_rooms bar on bar.id_bankbook = bb.id
-        inner join bankbook_attributes_humans ha on bb.id=ha.id_bankbook')
-    
+    @utszn_data = Payer.select("[firms].name, [utilities].name utility, [bankbooks].code_firm, [bankbooks].bank_book, 
+      [bankbook_attributes_humans].*, [bankbook_attributes_debts].*, [bankbook_attributes_lgots].*, 
+      [bankbook_attributes_rooms].*, [bankbook_attributes_tarifs].*").
+      where("humans.id=? and bankbook_attributes_debts.id_period =? 
+        and ? between bankbook_attributes_humans.id_period_begin and bankbook_attributes_humans.id_period
+        and ? between bankbook_attributes_rooms.id_period_begin and bankbook_attributes_rooms.id_period
+        and ? between bankbook_attributes_tarifs.id_period_begin and bankbook_attributes_tarifs.id_period
+        and ? between bankbook_attributes_lgots.id_period_begin and bankbook_attributes_lgots.id_period", 
+        @human.id, @period.id, @period.id, @period.id, @period.id, @period.id).
+      joins(:bankbooks => [:firm, :bankbook_attributes_humans, :bankbook_attributes_rooms,
+        {:bankbook_utilities => [:utility, :bankbook_attributes_debts, :bankbook_attributes_lgots, :bankbook_attributes_tarifs]}])
   end
   
   private
@@ -218,7 +209,7 @@ class PayersController < ApplicationController
     else
       id_main_city = @id_city
     end
-    @period = Period.find(:first, :conditions => ["id_city=? and status=1", id_main_city])
+    @period = Period.where("id_city=? and status=1", id_main_city).first
   end
 
   def find_human
@@ -226,42 +217,72 @@ class PayersController < ApplicationController
   end
 
   def find_payers
-    @payers = Payer.find(:all,
-      :select => 'bb.code_firm, bb.bank_book, ha.* ',
-      :conditions => ["humans.id=? and ha.id_period>=? and ha.id_period_begin<=?", 
-        @human.id, @period.id, @period.id],
-      :joins => 'left join bankbooks bb on humans.id=bb.id_human 
-        left join bankbook_attributes_humans ha on bb.id=ha.id_bankbook')
+    @bankbooks = Payer.find(@human.id).bankbooks
   end
   
+#  def find_payers
+#    @payers = Payer.select("[bankbooks].*, [bankbook_attributes_humans].*").
+#      where("humans.id=? and ? between id_period_begin and id_period", @human.id, @period.id).
+#      joins(:bankbooks => [:bankbook_attributes_humans])
+#  end
+  
   def find_room_params
-    @room_params = Payer.find(:all,
-      :select => 'bb.code_firm, bb.bank_book, ra.* ',
-      :conditions => ["humans.id=? and ra.id_period>=? and ra.id_period_begin<=?", 
-        @human.id, @period.id, @period.id],
-      :joins => 'left join bankbooks bb on humans.id=bb.id_human 
-        left join bankbook_attributes_rooms ra on bb.id=ra.id_bankbook')
+    @room_params = Payer.select("[bankbooks].*, [bankbook_attributes_rooms].*").
+      where("humans.id=? and id_period>=? and id_period_begin<=?", @human.id, @period.id, @period.id).
+      joins(:bankbooks => [:bankbook_attributes_rooms])
   end
 
   def find_debts
-    @debts = Payer.find(:all,
-      :select => 'bar.total_area, bar.heat_area, bat.tarif, bal.rate_lg1, 
-        bal.rate_lg2, bal.rate_lg3, bal.rate_lg4, bal.rate_lg5, bah.full_name, 
-        bah.resident_number, bb.code_firm, bb.bank_book, bu.code_utility, f.name firm, 
-        u.unit, u.name utility, u.code utility_id, ut.name ut_name, p.description period, d.* ',
-      :conditions => ["humans.id=? and d.id_period=?", @human.id, @period.id],
-      :joins => 'left join bankbooks bb on humans.id=bb.id_human
-        left join firms f on bb.code_firm=f.code
-        left join bankbook_utilities bu on bb.id=bu.id_bankbook
-        left join utilities u on bu.code_utility=u.code 
-        left join utility_types ut on u.id_type=ut.id 
-        left join bankbook_attributes_debts d on bu.id=d.id_bankbook_utility
-        left join bankbook_attributes_lgots bal on bu.id=bal.id_bankbook_utility and bal.id_period>=d.id_period and bal.id_period_begin<=d.id_period
-        left join bankbook_attributes_tarifs bat on bu.id=bat.id_bankbook_utility and bat.id_period>=d.id_period and bat.id_period_begin<=d.id_period
-        left join bankbook_attributes_rooms bar on bb.id=bar.id_bankbook and bar.id_period>=d.id_period and bar.id_period_begin<=d.id_period
-        left join bankbook_attributes_humans bah on bb.id=bah.id_bankbook and bah.id_period>=d.id_period and bah.id_period_begin<=d.id_period
-        left join periods p on p.id=d.id_period
-        ')
+    @debts = Payer.select('bankbook_attributes_rooms.total_area, bankbook_attributes_rooms.heat_area, 
+      bankbook_attributes_tarifs.tarif, 
+      bankbook_attributes_lgots.rate_lg1, bankbook_attributes_lgots.rate_lg2, bankbook_attributes_lgots.rate_lg3, 
+        bankbook_attributes_lgots.rate_lg4, bankbook_attributes_lgots.rate_lg5, 
+      bankbook_attributes_humans.full_name, bankbook_attributes_humans.resident_number, 
+      bankbooks.code_firm, bankbooks.bank_book, 
+      bankbook_utilities.code_utility, 
+      firms.name firm, 
+      utilities.unit, utilities.name utility, utilities.code utility_id, 
+      utility_types.name ut_name, 
+      periods.description period, 
+      bankbook_attributes_debts.*').
+      where("humans.id=? and bankbook_attributes_debts.id_period=?
+        and ? between bankbook_attributes_humans.id_period_begin and bankbook_attributes_humans.id_period
+        and ? between bankbook_attributes_rooms.id_period_begin and bankbook_attributes_rooms.id_period
+        and ? between bankbook_attributes_tarifs.id_period_begin and bankbook_attributes_tarifs.id_period
+        and ? between bankbook_attributes_lgots.id_period_begin and bankbook_attributes_lgots.id_period", 
+      @human.id, @period.id, @period.id, @period.id, @period.id, @period.id).
+      joins(:bankbooks => [:firm, :bankbook_attributes_humans, :bankbook_attributes_rooms,
+        {:bankbook_utilities => [{:utility => :utility_type}, {:bankbook_attributes_debts => :period}, 
+        :bankbook_attributes_lgots, :bankbook_attributes_tarifs]}])
+#        left join firms f on bb.code_firm=f.code
+#        left join bankbook_utilities bu on bb.id=bu.id_bankbook
+#        left join utilities u on bu.code_utility=u.code 
+#        left join utility_types ut on u.id_type=ut.id 
+#        left join bankbook_attributes_debts d on bu.id=d.id_bankbook_utility
+#        left join bankbook_attributes_lgots bal on bu.id=bal.id_bankbook_utility and bal.id_period>=d.id_period and bal.id_period_begin<=d.id_period
+#        left join bankbook_attributes_tarifs bat on bu.id=bat.id_bankbook_utility and bat.id_period>=d.id_period and bat.id_period_begin<=d.id_period
+#        left join bankbook_attributes_rooms bar on bb.id=bar.id_bankbook and bar.id_period>=d.id_period and bar.id_period_begin<=d.id_period
+#        left join bankbook_attributes_humans bah on bb.id=bah.id_bankbook and bah.id_period>=d.id_period and bah.id_period_begin<=d.id_period
+#        left join periods p on p.id=d.id_period
+#        ')
+#    @debts = Payer.find(:all,
+#      :select => 'bar.total_area, bar.heat_area, bat.tarif, bal.rate_lg1, 
+#        bal.rate_lg2, bal.rate_lg3, bal.rate_lg4, bal.rate_lg5, bah.full_name, 
+#        bah.resident_number, bb.code_firm, bb.bank_book, bu.code_utility, f.name firm, 
+#        u.unit, u.name utility, u.code utility_id, ut.name ut_name, p.description period, d.* ',
+#      :conditions => ["humans.id=? and d.id_period=?", @human.id, @period.id],
+#      :joins => 'left join bankbooks bb on humans.id=bb.id_human
+#        left join firms f on bb.code_firm=f.code
+#        left join bankbook_utilities bu on bb.id=bu.id_bankbook
+#        left join utilities u on bu.code_utility=u.code 
+#        left join utility_types ut on u.id_type=ut.id 
+#        left join bankbook_attributes_debts d on bu.id=d.id_bankbook_utility
+#        left join bankbook_attributes_lgots bal on bu.id=bal.id_bankbook_utility and bal.id_period>=d.id_period and bal.id_period_begin<=d.id_period
+#        left join bankbook_attributes_tarifs bat on bu.id=bat.id_bankbook_utility and bat.id_period>=d.id_period and bat.id_period_begin<=d.id_period
+#        left join bankbook_attributes_rooms bar on bb.id=bar.id_bankbook and bar.id_period>=d.id_period and bar.id_period_begin<=d.id_period
+#        left join bankbook_attributes_humans bah on bb.id=bah.id_bankbook and bah.id_period>=d.id_period and bah.id_period_begin<=d.id_period
+#        left join periods p on p.id=d.id_period
+#        ')
 #        left join counters c on bu.id=c.bankbook_utility_id 
 #        left join counter_readings cr on c.id=cr.counter_id 
 #        left join last_firm_attributes_view fa on bb.code_firm=fa.code
@@ -270,26 +291,15 @@ class PayersController < ApplicationController
   end
 
   def find_tariffs
-    @tariffs = Payer.find(:all,
-      :select => 'bb.code_firm, bb.bank_book, bu.code_utility, f.name firm, u.name utility, t.* ',
-      :conditions => ["humans.id=? and t.id_period>=? and t.id_period_begin<=?", 
-        @human.id, @period.id, @period.id],
-      :joins => 'left join bankbooks bb on humans.id=bb.id_human
-        left join firms f on bb.code_firm=f.code
-        left join bankbook_utilities bu on bb.id=bu.id_bankbook
-        left join utilities u on bu.code_utility=u.code 
-        left join bankbook_attributes_tarifs t on bu.id=t.id_bankbook_utility')
+    @tariffs = Payer.select("[bankbooks].*, [bankbook_utilities].*, [firms].name firm, [utilities].name utility, [bankbook_attributes_tarifs].*").
+      where("humans.id=? and id_period>=? and id_period_begin<=?", @human.id, @period.id, @period.id).
+      joins(:bankbooks => [:firm, {:bankbook_utilities=> [:utility, :bankbook_attributes_tarifs]}])
   end
 
   def find_exemptions
-    @exemptions = Payer.find(:all,
-      :select => 'bb.code_firm, bb.bank_book, bu.code_utility, f.name firm, u.name utility, e.* ',
-      :conditions => ["humans.id=? and e.id_period=?", @human.id, @period.id],
-      :joins => 'left join bankbooks bb on humans.id=bb.id_human
-        left join firms f on bb.code_firm=f.code
-        left join bankbook_utilities bu on bb.id=bu.id_bankbook
-        left join utilities u on bu.code_utility=u.code 
-        left join bankbook_attributes_lgots e on bu.id=e.id_bankbook_utility')
+    @exemptions = Payer.select("[bankbooks].*, [bankbook_utilities].code_utility, [firms].name firm, [utilities].name utility, [bankbook_attributes_lgots].*").
+      where("humans.id=? and id_period>=? and id_period_begin<=?", @human.id, @period.id, @period.id).
+      joins(:bankbooks => [:firm, {:bankbook_utilities => [:utility, :bankbook_attributes_lgots]}])
   end
 
   def find_order 
@@ -311,8 +321,9 @@ class PayersController < ApplicationController
 #        left join bankbook_attributes_tarifs t on bu.id=t.id_bankbook_utility')
 # order by date_p desc,firm_name,plat_name       
   end
+
   def find_debt
-    @debt = BankbookAttributesDebt.find(:first,
-      :conditions => ["id_bankbook_utility=? and id_period=?", params[:debt_id], params[:period_id]])
+    @debt = BankbookAttributesDebt.where("id_bankbook_utility=? and id_period=?", params[:debt_id], params[:period_id]).first
   end
+  
 end

@@ -1,0 +1,16 @@
+-#+@counter.bankbook_utility.bankbook.payer.full_name.to_utf
+%h1 #{@counter.counter_type.description.to_utf+' ('+@counter.description.to_utf+')'} 
+
+.content
+  %table.data
+    %tr
+      %th Значение
+      %th Дата
+    - for reading in @readings
+      %tr
+        %td=h reading.value
+        %td=h reading.date.strftime("%d.%m.%Y")
+  .actions
+    = link_to 'Добавить', :action => 'new', :counter_id => @counter.id
+    = link_to 'Счетчики', :controller => 'counters', :action => 'index', :bankbook_utility_id => @counter.bankbook_utility_id
+    

@@ -1,0 +1,14 @@
+%h1= @counter_name.to_utf
+
+.content
+  %table.data
+    %tr
+      %th Описание
+    - for counter in @counters
+      %tr
+        %td=h counter.description.to_utf
+        %td= link_to 'Показания', :controller => "counter_readings", :action => 'index', :counter_id => counter.id
+  .actions
+    -# if current_user.admin?
+    = link_to 'Добавить', :action => 'new', :bankbook_utility_id => @bankbook_utility_id
+    

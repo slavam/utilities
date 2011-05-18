@@ -1,0 +1,19 @@
+%h1
+  = submit
+  счетчик
+.content
+  - form_for @counter, :url => {:action => "create", :bankbook_utility_id => @counter.bankbook_utility_id} do |form|
+    = form.error_messages
+    - @counter.counter_type_id = 1
+    %table.card
+      %tr
+        %th
+          = form.label "Описание"
+        %td= form.text_field :description
+      %tr
+        %th
+          = form.label "Дата установки"
+        %td= date_select :counter, :install_date, :order => [:day, :month, :year], :use_month_numbers => true
+    %br
+  
+    = submit_tag submit

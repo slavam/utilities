@@ -1,0 +1,20 @@
+= render :partial => 'main_data'
+%h1 Плательщики за #{@period.description.to_utf}
+.content
+  %table.card
+    %tr
+      %th Фирма
+      %th Счет
+      %th Плательщик
+      %th Владелец 
+      %th Телефон
+      %th Жильцов
+    - for p in @payers do
+      %tr
+        %td= link_to p.code_firm.to_s, :controller => 'firms', :action => 'show', :id => p.code_firm
+        %td= p.bank_book.to_utf
+        %td= p.full_name.to_utf
+        %td= p.full_name_owner.to_utf
+        %td= p.phone.to_utf
+        %td= p.resident_number  
+= render :partial => 'bottom_data'

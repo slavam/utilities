@@ -9,12 +9,14 @@
       %th Владелец 
       %th Телефон
       %th Жильцов
-    - for p in @payers do
-      %tr
-        %td= link_to p.code_firm.to_s, :controller => 'firms', :action => 'show', :id => p.code_firm
-        %td= p.bank_book.to_utf
-        %td= p.full_name.to_utf
-        %td= p.full_name_owner.to_utf
-        %td= p.phone.to_utf
-        %td= p.resident_number  
-= render :partial => 'bottom_data'
+    - for bb in @bankbooks do
+      - for ha in bb.bankbook_attributes_humans do
+        -if ha.id_period_begin <= @period.id and ha.id_period >= @period.id
+          %tr
+            %td= link_to bb.code_firm.to_s, :controller => 'firms', :action => 'show', :id => bb.code_firm
+            %td= bb.bank_book.to_utf
+            %td= ha.full_name.to_utf
+            %td= ha.full_name_owner.to_utf
+            %td= ha.phone
+            %td= ha.resident_number
+= render :partial => 'bottom_data'            

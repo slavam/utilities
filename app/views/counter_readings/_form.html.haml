@@ -1,0 +1,20 @@
+%h1
+  = submit
+  показания счетчика
+.content
+  - form_for @reading, :url => {:action => "create", :counter_id => @counter.id} do |form|
+    = form.error_messages
+    %table.card
+      %tr
+        %th
+          = form.label "Старое значение"
+        %td
+          = form.label @last_reading.to_s+ (@last_reading>0 ? ' ( от '+@last_reading_date.to_date.to_s+')' : '')
+      %tr
+        %th
+          = form.label "Новое значение"
+        %td
+          = form.text_field :value, :size => 6
+    %br
+  
+    = submit_tag submit

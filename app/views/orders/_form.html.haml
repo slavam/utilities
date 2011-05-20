@@ -1,0 +1,35 @@
+%h1 КВИТАНЦИЯ
+.content
+  - s = 0
+  %table.card
+    %tr
+      %th Код ЕРЦ
+      %td= @order.payer.code_erc
+    %tr
+      %th Фамилия, имя, отчество
+      %td= @order.payer.full_name.to_utf
+    %tr
+      %th Адрес  
+      %td= @order.payer.address
+.content
+  - form_for "order_items[]", @order.order_items, :url => { :action => "update", :order => @order} do |f| 
+    %table.card
+      %tr 
+        %th Услуга
+        %th Начало периода
+        %th Конец периода
+        %th Сумма
+      - for @line in @order.order_items do
+        %tr 
+          %td= @line.bankbook_utility.utility.name.to_utf
+          %td= select_date @line.start_date,  :index => @line.id
+          %td= date_select @line.end_date, :index => @line.id
+          - s = s+@line.amount.to_f
+          %td= text_field :line, :amount, :size => 5, :index => @line.id 
+      %tr
+        %td{:colspan => 3}= "ИТОГО"
+        %td= s
+    = submit_tag "Сохранить"
+.actions
+-#  =link_to 'Сохранить', :action => 'save_print', :code_erc => @human.code_erc, :id_city => @human.id_city
+      

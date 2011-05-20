@@ -3,7 +3,6 @@
   счетчик
 .content
   - form_for @counter, :url => {:action => "create", :bankbook_utility_id => @counter.bankbook_utility_id} do |form|
-    = form.error_messages
     - @counter.counter_type_id = 1
     %table.card
       %tr

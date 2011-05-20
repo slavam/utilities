@@ -1,0 +1,33 @@
+%h1 КВИТАНЦИЯ
+.content
+  - s = 0
+  %table.card
+    %tr
+      %th Код ЕРЦ
+      %td= @order.payer.code_erc
+    %tr
+      %th Фамилия, имя, отчество
+      %td= @order.payer.full_name.to_utf
+    %tr
+      %th Адрес  
+      %td= @order.payer.address
+.content
+  %table.card
+    %tr 
+      %th Услуга
+      %th Начало периода
+      %th Конец периода
+      %th Сумма
+    - for line in @order.order_items do
+      %tr 
+        %td= line.bankbook_utility.utility.name.to_utf
+        %td= line.start_date.to_date
+        %td= line.end_date.to_date
+        %td= line.amount 
+        - s = s+line.amount
+    %tr
+      %td{:colspan => 3}= "ИТОГО"
+      %td= s
+.actions
+  =link_to 'Редактировать', edit_order_path(@order)
+      

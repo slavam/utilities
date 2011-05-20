@@ -1,0 +1,25 @@
+%h1 Список квитанций
+
+.content
+  %table.data
+    %tr
+      %th Населенный пункт
+      %th Код 
+      %th Фамилия, имя, отчество
+      %th Дата операции
+      %th Состояние
+    - for order in @orders
+      %tr
+        %td
+          =h(order.payer.city.city_type.short_name.to_utf+' '+order.payer.city.name_rus.to_utf)
+        %td 
+          = link_to h(order.payer.code_erc), :action => 'show', :id => order.id
+        %td
+          =h(order.payer.full_name.to_utf)
+        %td
+          =h(order.date_operation.to_date)
+        %td
+          =h order.order_state.description.to_utf
+  .actions
+-#    = link_to 'Добавить', :action => 'new'
+

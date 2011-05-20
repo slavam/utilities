@@ -22,6 +22,8 @@
             - debt = u.bankbook_attributes_debts :condition => ["id_period = ? ", @period.id]
             %td= debt[0].sum_dolg
             %td= debt[0].sum_month
+            - if (u.code_utility == 8) or (u.code_utility == 20) or (u.code_utility == 21) or (u.code_utility == 39)  
+              %td= link_to "Создать", :controller => "counters", :action => 'new', :bankbook_utility_id => u.id 
             - if u.counters.size>0
               - for c in u.counters do
                 %tr

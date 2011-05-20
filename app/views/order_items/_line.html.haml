@@ -1,0 +1,7 @@
+%tr
+  %td= @line.utility_name
+  %td= date_select :start_date, @line.start_date, :order => [:day, :month, :year], :use_month_numbers => true
+  %td= date_select :end_date, @line.end_date, :order => [:day, :month, :year], :use_month_numbers => true
+  %td= @line.debt
+  %td= @line.expense
+  %td= text_field_tag :amount, @line.amount, :size => 5

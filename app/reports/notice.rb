@@ -16,7 +16,6 @@ class Notice < Prawn::Document
 
     bounding_box [(bounds.width-250), bounds.top], :width => 250 do
       text "Код ЕРЦ: "+sub.code_erc.to_s+" Извещение за "+
-#        I18n.l(debts[0].date_dolg, :format => :short)+
         (debts[0].date_dolg - 1.month).strftime("%B %Y ")+" Адрес: "+
         sub.address+' '+sub.full_name.to_utf
     end
@@ -34,7 +33,6 @@ class Notice < Prawn::Document
           debt = d.sum_dolg.to_utf+ "\n" +'долг' 
         else
           debt = d.sum_dolg.to_utf+ "\n" +'переплата'
-#          debt = BigDecimal(d.sum_dolg).ceil(2).abs.to_f.to_s+ "\n" +' переплата'
         end
       else
         debt = ''

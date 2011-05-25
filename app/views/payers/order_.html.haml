@@ -1,52 +1,70 @@
+# coding: utf-8
+
+= render :partial => 'main_data'
 %h1 ИЗВЕЩЕНИЕ
 .content
-  - @data = []
-  - s = 0
-  %table.card
-    %tr
-      %th Код ЕРЦ
-      %td= @human.code_erc
-    %tr
-      %th Фамилия, имя, отчество
-      %td= @human.full_name
-    %tr
-      %th Адрес  
-      %td= @human.address
-.content
-  %table.card
-    %tr
-      %th Услуга
-      %th Начало периода
-      %th Конец периода
-      %th Долги
-      %th Начисления 
-      %th Сейчас
-      %th Было
-      %th Разность
-      %th Сумма
-    - for d in @debts do
+  - s = 0.00
+  - form_for "line[]", @debts, :url => {:action => "order_print", :id => @human.id, :period_id => @debts[0].id_period, :format => 'pdf'} do |f| 
+    %table.card
       %tr
-        %td= d.utility
-        %td= date_select :order, :start, :order => [:day, :month, :year], :use_month_numbers => true
-        %td= date_select :order, :end, :order => [:day, :month, :year], :use_month_numbers => true
-        %td= d.sum_dolg
-        %td= d.sum_month 
-        - s = s+d.sum_month.to_f
-        - if d.utility_id == 8 || d.utility_id ==20 || d.utility_id ==21 || d.utility_id ==22 || d.utility_id ==38 || d.utility_id ==41
-          %td= text_field_tag :today, 0, :size => 6
-          %td= text_field_tag :last, d.end_count, :size => 6
-          %td= text_field_tag :delta, d.month_count, :size => 6
-        - else
-          %td= ""
-          %td= ""
-          %td= ""
-        %td= text_field_tag :total, d.sum_month, :size => 5
-        - @data << [d.utility, :start, "По", :today, :last, :delta, :total]
-    %tr
-      %td{:colspan => 8}= "<b>ИТОГО </b>"
-      %td= s
-      - delta = s
--#    = submit_tag "Распечатать"
-.actions
-  =link_to 'Распечатать', :action => 'order_print', :code_erc => @human.code_erc, :id_city => @human.id_city
-      
+        %th{:colspan => 9}
+        %th= "Счетчики"
+      %tr
+        %th{:colspan => 6}
+        %th{:colspan => 3}= "Счетчик1"
+        %th{:colspan => 3}= "Счетчик2"
+        %th= "Счетчик3"
+      %tr  
+        %th Услуга
+        %th Долги
+        %th Начислено 
+        %th Сумма
+        %th Тариф
+        %th Сейчас
+        %th Было
+        %th Объем
+        %th Сейчас
+        %th Было
+        %th Объем
+        %th Сейчас
+        %th Было
+        %th Объем
+      - for @debt in @debts do
+        %tr
+          %td= @debt.utility.to_utf
+          %td= @debt.sum_dolg.to_utf
+          %td= @debt.sum_month.to_utf 
+          - s = s+@debt.sum_month.to_f
+          -# @debt.sum_month = number_to_currency(@debt.sum_month.to_f+@debt.sum_dolg.to_f, :unit => "")
+          - @debt.sum_month = number_to_currency(@debt.sum_month.to_f, :unit => "")
+          - if (@debt.code_utility.to_i == 8 or @debt.code_utility.to_i == 20 or @debt.code_utility.to_i == 21 or @debt.code_utility.to_i == 39) 
+            = render :partial => 'update_3counters'
+            - for b in @bankbooks do
+              - for bu in b.bankbook_utilities do
+                - for c in bu.counters do 
+                  - if @debt.id_bankbook_utility == c.bankbook_utility_id
+                    %tr
+                      %td{:colspan => 5}
+                      %td= c.description.to_utf
+                      - crs = c.counter_readings.all :order => "date DESC"
+                      %td= crs[0].value
+                      - delta = crs[0].value
+                      - if crs.size==1
+                        %td= 0
+                      - else
+                        %td= crs[1].value
+                        - delta = crs[0].value - crs[1].value
+                      %td= delta
+                      %td= link_to "Показания", :controller => "counter_readings", :action => 'index', :counter_id => c.id 
+          - else
+            %td
+              %div{:id => 'sum_'+@debt.id_bankbook_utility.to_s}
+                = text_field :debt, :sum_month, :index => @debt.id, :size => 5
+      %tr
+        %td{:colspan => 3}= "ИТОГО "
+        %td= number_to_currency(s, :unit => "грн.", :format => "%n %u")
+     
+    %br    
+      = submit_tag "Распечатать"  
+
+    

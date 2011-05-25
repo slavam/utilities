@@ -81,9 +81,10 @@ class PayersController < ApplicationController
   end
 
   def order
-    if @order
-      redirect_to :action => "show", :code_erc => params[:code_erc], :id_city => params[:id_city]  
-    end
+    find_payers
+#    if @order
+#      redirect_to :action => "show", :code_erc => params[:code_erc], :id_city => params[:id_city]  
+#    end
   end
 
   def order_print

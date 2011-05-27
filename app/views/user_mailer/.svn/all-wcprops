@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/subversion/!svn/ver/679/tuba/app/views/user_mailer
+END
+password_reset_instructions.html.haml
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/subversion/!svn/ver/667/tuba/app/views/user_mailer/password_reset_instructions.html.haml
+END
+new_user_instructions.html.haml
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/subversion/!svn/ver/679/tuba/app/views/user_mailer/new_user_instructions.html.haml
+END

@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :require_admin
+  before_filter :require_admin, :except => :new
   before_filter :find_user, :only => [:show, :edit, :update]
 
   def index

@@ -10,7 +10,7 @@ class UserSessionsController < ApplicationController
     @user_session = UserSession.new(params[:user_session])
     if @user_session.save
       notice_created
-      redirect_back_or_default :controller => "cities", :action => "index_active_cities"
+      redirect_back_or_default profile_path
     else
       render :action => :new
     end

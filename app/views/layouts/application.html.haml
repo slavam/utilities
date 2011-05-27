@@ -29,14 +29,14 @@
                 ['Города', cities_path],     |
                 ['Организации', firms_path],     |
                 ['Подразделения', bankunits_path],            |
-                ['Долги', (current_user ? {:controller => "payers", :action => "show", :id => current_user} : new_user_session_url)],            |
-                ['Квитанции',  orders_path], |
-                ['Услуги', (current_user ? {:controller => "cities", :action => "index_active_cities"} : new_user_session_url)]            |
+                ['Долги', (current_user ? {:controller => "payers", :action => "show", :id => current_user.id_human} : new_user_session_url)],            |
+                ['Квитанции',  orders_path] |
               ] |
             - 
             -##div{'style' => "float: left;margin-left: 30px"}
               -#= render :partial => 'layouts/menuItem', :collection => [ |
               -#['Услуги', new_user_session_url],            |
+                -#['УТиСЗН', (current_user and (current_user.login == 'admin') ? {:controller => "cities", :action => "index_active_cities"} : new_user_session_url)]            |
                 -#['Domains', '#'], |
                 -#['Google apps', '#'], |
                 -#['Other', '#'] |
@@ -45,9 +45,9 @@
             %div{'style' => "float: right;"}
               = csrf_meta_tag
               = render :partial => 'layouts/menuItem', :collection => [               |
-                ['Your profile', profile_path],                               |
+                ['Ваш профиль', profile_path],                               |
                 ['Admin settings', settings_path, nil, (!current_user or !current_user.admin?)], |
-                ['Logout', user_session_path, { :method => :delete }]         |
+                ['Выход', user_session_path, { :method => :delete }]         |
               ] |
             -
 

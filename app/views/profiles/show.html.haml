@@ -1,12 +1,12 @@
 = csrf_meta_tag
 %h1  
-  Hello, 
+  Пользователь 
   =h @current_user.login
 
 %table.card
   %tr
     %th
-      Login:
+      Логин:
     %td
       =h @current_user.login
   %tr
@@ -16,8 +16,8 @@
       =h @current_user.email
 
 .actions
-  = link_to "Edit", :action => 'edit'
-  = link_to "Change password", edit_password_path
-  = link_to 'Logout', user_session_path, { :method => :delete }
+  = link_to "Редактировать", :action => 'edit'
+  = link_to "Сменить пароль", edit_password_path
+  = link_to 'Выход', user_session_path, { :method => :delete }
 
 

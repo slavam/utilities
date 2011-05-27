@@ -1,0 +1,55 @@
+ru:
+  flash:
+    code_erc_absent: Отсутствует код плательщика
+    home_absent: Отсутствует номер дома
+    wrong_home: Неверный номер дома
+    room_absent: Отсутствует номер квартиры
+    wrong_room: Неверный номер квартиры
+    require_admin: Only admin user can see this page
+    require_user: You must be logged in to access this page
+    require_no_user: Эта функция доступна только для администратора
+    no_streets_by_city: Для заданного населенного пункта справочник улиц пуст
+    no_homes_on_street: Для заданной улицы нет домов
+    new_reading_value_too_small: Показание счетчика не должно быть меньше предыдущего
+
+    created: "{{name}} объект был создан"
+    updated: "{{name}} was updated"
+    destroyed: "{{name}} was destroyed"
+
+    user_session:
+      created: Успешный вход в систему
+      destroyed: Успешный выход пользователя
+
+    reset_password:
+      send_link_notice: 
+        Instructions to reset your password have been emailed to you.
+        Please check your email.
+      invalid_perishable_token:
+        We are sorry, but we could not locate your account.
+        If you are having issues try copying and pasting the URL
+        from your email into your browser or restarting the
+        reset password process.
+      updated:
+        Password successfully updated
+
+  mailer:
+    subjects:
+      password_reset_instructions: You have requested to change your password
+      new_user_instructions: You have been added to Tuba
+
+  activerecord:
+    errors:
+      messages:
+        user_with_such_email_not_found: No user was found with that email address
+        blank: "не может быть пустым"
+      template: 
+        header: 
+          one: "1 ошибка не позволяет сохранить запись {{model}}" 
+          other: "{{count}} ошибок не позволяют сохранить запись {{model}}" 
+        body: "Проблемы со следующими полями:" 
+    models:
+      city:
+    attributes:
+      city:
+        name_rus: "Название"
+        

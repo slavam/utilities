@@ -1,13 +1,11 @@
-%h1
-  = submit
-  User
+%h1= submit +" нового пользователя"
 .content
   - form_for @user do |form|
-    = form.error_messages
+    -#= form.error_messages
     %table
       %tr
         %th 
-          = form.label :login
+          = form.label "Логин"
         %td
           = form.text_field :login
       %tr
@@ -15,6 +13,12 @@
           = form.label :email
         %td
           = form.text_field :email
+      %tr
+        %th= "Населенный пункт"
+        %td= select(:city, :id, City.find(:all, :conditions => ["id_parent in (select id from cities where lastGenErcCode>0) and id_parent != 0 and id_type > 0"], :order => :name_rus).map {|c| [c.name_rus.to_utf, c.id]} )
+      %tr
+        %th= "Код плательщика"
+        %td= text_field_tag :code_erc, '', :size => 9
       %tr
         %th
           = form.label :active

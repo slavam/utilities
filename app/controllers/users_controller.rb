@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :require_admin, :except => :new
+#  before_filter :require_admin, :except => [:new, :update]
   before_filter :find_user, :only => [:show, :edit, :update]
 
   def index
@@ -13,6 +13,8 @@ class UsersController < ApplicationController
   def create
     @user = User.new params[:user]
     @user.randomize_password
+    @human = Payer.where("code_erc=? and id_city=?", params[:code_erc], params[:city][:id]).first
+    @user.id_human = @human.id
 
     if not @user.save
       render :new

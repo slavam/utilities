@@ -1,7 +1,6 @@
 class UserMailer < ActionMailer::Base
   def password_reset_instructions(user)
     setup user
-
     @subject = I18n.t 'mailer.subjects.password_reset_instructions'
     @body[:url] = reset_password_url(:id => user.perishable_token)
   end 

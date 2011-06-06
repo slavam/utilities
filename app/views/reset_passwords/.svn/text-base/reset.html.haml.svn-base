@@ -1,0 +1,17 @@
+%h1 Reset Password
+ 
+- form_for @user, :url => '', :html => { :method => :post } do |f|
+  = f.error_messages
+  %table.card
+    %tr
+      %th
+        = f.label :password
+      %td
+        = f.password_field :password 
+    %tr
+      %th
+        = f.label :password_confirmation
+      %td
+        = f.password_field :password_confirmation 
+  %br
+  = submit_tag 'Reset'

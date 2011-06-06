@@ -239,6 +239,8 @@
       - for d in @utszn_data do
         %td= d.tarif_f
         
+.actions
+  =link_to "Распечатать", :action => 'print_utszn', :human => @human, :data => @utszn_data, :id => @human.id, :format => 'pdf'          
 = render :partial => 'bottom_data'  
 
       

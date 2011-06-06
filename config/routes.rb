@@ -7,8 +7,8 @@ Utilities::Application.routes.draw do |map|
 #  map.root :controller => "user_sessions", :action => "new"
 
   resource :user_session
-  root :to => 'user_sessions#new'
-#  root :to => 'cities#index'
+#  root :to => 'user_sessions#new'
+  root :to => 'cities#index'
   resources :cities do
     collection do
       get :city_print, :index_active_cities
@@ -30,6 +30,23 @@ Utilities::Application.routes.draw do |map|
 
   resource :password
 
+  resources :reset_passwords do
+    member do
+      get 'reset'
+      post 'reset'
+    end
+  end
+  
+#  match 'send_link' => "reset_password#send_link", :as => :send_link
+
+#  match 'reset' => "reset_password#reset", :as => :reset 
+
+#  map.with_options :path_prefix => "reset_password", :controller => 'reset_passwords'  do |r|
+#    r.send_reset_link '/send_link', :action => 'send_link'
+#    r.reset_password '/reset',  :action => 'reset'
+#  end
+
+
   resources :bankunits do
   end 
 
@@ -50,7 +67,8 @@ Utilities::Application.routes.draw do |map|
     collection do
       post :search, :order_print, :update_count_debt
       get :show, :order, :test, :debt, :passport, :passport_print, :show_payers, :show_housing, :show_tariffs,
-        :show_exemptions, :show_histories, :find_payer_by_address, :order_print, :update_counters, :show_utszn_data
+        :show_exemptions, :show_histories, :find_payer_by_address, :order_print, :update_counters, :show_utszn_data,
+        :print_utszn
     end
   end 
 

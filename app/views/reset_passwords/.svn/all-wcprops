@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/subversion/!svn/ver/693/tuba/app/views/reset_passwords
+END
+reset.html.haml
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/subversion/!svn/ver/693/tuba/app/views/reset_passwords/reset.html.haml
+END
+send_link.html.haml
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/subversion/!svn/ver/693/tuba/app/views/reset_passwords/send_link.html.haml
+END

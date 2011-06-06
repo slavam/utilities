@@ -2,7 +2,7 @@ class PayersController < ApplicationController
   before_filter :find_human, :except => [:search, :find_payer_by_address, :update_counters]
   before_filter :get_city_id, :except => [:find_payer_by_address, :show, :update_counters]
   before_filter :find_period, :only => [:show, :show_payers, :show_housing, :show_tariffs, :show_exemptions, 
-    :order, :order_print, :debt, :test, :show_utszn_data]
+    :order, :order_print, :debt, :test, :show_utszn_data, :print_utszn]
   before_filter :find_payers, :only => [:show_payers]
   before_filter :find_room_params, :only => [:show_housing]
   before_filter :find_debts, :only => [:show, :order, :order_print, :debt, :show_utszn_data]
@@ -10,6 +10,8 @@ class PayersController < ApplicationController
   before_filter :find_exemptions, :only => [:show_exemptions]
   before_filter :find_order, :only => [:order]
   before_filter :find_history, :only => [:show_histories]
+#  before_filter :show_utszn_data, :only => :print_utszn
+  
 
   def update_count_debt
     redirect_to :action => "order", :id => 1
@@ -187,6 +189,29 @@ class PayersController < ApplicationController
         @human.id, @period.id, @period.id, @period.id, @period.id, @period.id).
       joins(:bankbooks => [:firm, :bankbook_attributes_humans, :bankbook_attributes_rooms,
         {:bankbook_utilities => [:utility, :bankbook_attributes_debts, :bankbook_attributes_lgots, :bankbook_attributes_tarifs]}])
+  end
+
+  def print_utszn
+    @utszn_data = Payer.select("[firms].name, [utilities].name utility, [bankbooks].code_firm, [bankbooks].bank_book, 
+      [bankbook_attributes_humans].*, [bankbook_attributes_debts].*, [bankbook_attributes_lgots].*, 
+      [bankbook_attributes_rooms].*, [bankbook_attributes_tarifs].*").
+      where("humans.id=? and bankbook_attributes_debts.id_period =? 
+        and ? between bankbook_attributes_humans.id_period_begin and bankbook_attributes_humans.id_period
+        and ? between bankbook_attributes_rooms.id_period_begin and bankbook_attributes_rooms.id_period
+        and ? between bankbook_attributes_tarifs.id_period_begin and bankbook_attributes_tarifs.id_period
+        and ? between bankbook_attributes_lgots.id_period_begin and bankbook_attributes_lgots.id_period", 
+        @human.id, 
+        @period.id, @period.id, @period.id, @period.id, @period.id).
+      joins(:bankbooks => [:firm, :bankbook_attributes_humans, :bankbook_attributes_rooms,
+        {:bankbook_utilities => [:utility, :bankbook_attributes_debts, :bankbook_attributes_lgots, :bankbook_attributes_tarifs]}])
+    RGhost::Config::GS[:path]='C:\gs\gs9.00\bin\gswin32.exe'
+    output = Utszn.new(:page_size => "A4", :page_layout => :landscape, :margin => 10).to_pdf @human, @utszn_data
+
+    respond_to do |format|
+      format.pdf do
+        send_data output, :filename => "utszn.pdf", :type => "application/pdf", :format => 'pdf'
+      end
+    end
   end
   
   private

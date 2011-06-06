@@ -1,5 +1,4 @@
 class User < ActiveRecord::Base
-#  has_many :project_members, :dependent => :destroy
   attr_accessor :current_password
 
   acts_as_authentic do |c|

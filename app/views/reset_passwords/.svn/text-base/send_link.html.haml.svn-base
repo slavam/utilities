@@ -1,0 +1,12 @@
+%h1 Send Password Reset Link
+- form_for :user, :url => '', :html => { :method => :post } do |f|
+  = error_messages_for :user
+  What is the email address used to create your account?
+  %table
+    %tr
+      %th Email
+      %td
+        = f.text_field :email
+  %br
+  = submit_tag 'Send Link'
+

@@ -1,5 +1,5 @@
 class ResetPasswordsController < ApplicationController
-  before_filter :require_no_user
+#  before_filter :require_no_user
 
   def send_link
     @user = User.new and return unless request.post?
@@ -18,13 +18,15 @@ class ResetPasswordsController < ApplicationController
 
   def reset
     @user = User.find_using_perishable_token(params[:id])
+p "ResetPasswordsController.reset 0 >>>>>>>>>>>>>>>>>>"
     unless @user
       flash_error 'invalid_perishable_token'
       redirect_to root_url
       return
     end  
-
+p "ResetPasswordsController.reset 1 >>>>>>>>>>>>>>>>>>"
     return unless request.post?
+p "ResetPasswordsController.reset 2 >>>>>>>>>>>>>>>>>>"
 
     @user.password = params[:user][:password]
     @user.password_confirmation = params[:user][:password_confirmation]
